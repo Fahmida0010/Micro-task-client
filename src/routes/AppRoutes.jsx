@@ -114,6 +114,7 @@ import WorkerRoute from "./WorkerRoutes";
 import AdminHome from "../pages/Dashboard/admin/AdminHome";
 import ManageUsers from "../pages/Dashboard/admin/ManageUsers";
 import ManageTasks from "../pages/Dashboard/admin/ManageTasks";
+import AdminRoute from "./AdminRoutes";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {

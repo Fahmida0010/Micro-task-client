@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axiosSecure from "../../../utils/axiosSecure";
+import axiosSecure from "../../../hooks/useAxiosSecure";
+
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);

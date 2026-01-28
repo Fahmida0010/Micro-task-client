@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
+import { FaHome, FaTasks, FaPlusCircle, FaCoins, FaHistory, FaUsers, FaUserShield } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useAuth } from "../context/AuthProvider";
 import axiosSecure from "../hooks/useAxiosSecure";
 
-const DashboardLayout = () => {
 
+const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { user, loading } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,62 +22,54 @@ const DashboardLayout = () => {
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user.email}`);
       return res.data;
-    }
+    },
   });
 
   // 🚦 Redirect logic inside layout
   useEffect(() => {
-
     if (loading || isLoading) return;
-
     if (!user) {
       navigate("/login", { replace: true });
       return;
     }
-
     const role = dbUser?.role;
-
-    // Only redirect if user just entered /dashboard
     if (location.pathname === "/dashboard") {
-
       if (role === "worker") navigate("/dashboard/worker-home", { replace: true });
       if (role === "buyer") navigate("/dashboard/buyer-home", { replace: true });
       if (role === "admin") navigate("/dashboard/admin-home", { replace: true });
-
     }
-
   }, [user, loading, isLoading, dbUser, location.pathname, navigate]);
 
   if (loading || isLoading) {
     return <div className="p-10 text-center">Loading...</div>;
   }
-
   if (!user) return null;
 
   const role = dbUser?.role;
 
+  // --- Menu arrays with icons ---
   const buyerMenu = [
-    { label: "Home", path: "/dashboard/buyer-home" },
-    { label: "Add Task", path: "/dashboard/add-task" },
-    { label: "My Tasks", path: "/dashboard/my-tasks" },
-    { label: "Purchase Coin", path: "/dashboard/purchase-coin" },
-    { label: "Payment History", path: "/dashboard/payment-history" },
+    { label: "Home", path: "/dashboard/buyer-home", icon: <FaHome /> },
+    { label: "Add Task", path: "/dashboard/add-task", icon: <FaPlusCircle /> },
+    { label: "My Tasks", path: "/dashboard/my-tasks", icon: <FaTasks /> },
+    { label: "Purchase Coin", path: "/dashboard/purchase-coin", icon: <FaCoins /> },
+    { label: "Payment History", path: "/dashboard/payment-history", icon: <FaHistory /> },
   ];
 
   const workerMenu = [
-    { label: "Home", path: "/dashboard/worker-home" },
-    { label: "Task List", path: "/dashboard/task-list" },
-    { label: "My Submissions", path: "/dashboard/my-submissions" },
-    { label: "Withdrawals", path: "/dashboard/withdrawals" },
+    { label: "Home", path: "/dashboard/worker-home", icon: <FaHome /> },
+    { label: "Task List", path: "/dashboard/task-list", icon: <FaTasks /> },
+    { label: "My Submissions", path: "/dashboard/my-submissions", icon: <FaHistory /> },
+    { label: "Withdrawals", path: "/dashboard/withdrawals", icon: <FaCoins /> },
   ];
 
   const adminMenu = [
-    { label: "Home", path: "/dashboard/admin-home" },
-    { label: "Users", path: "/dashboard/users" },
+    { label: "Home", path: "/dashboard/admin-home", icon: <FaHome /> },
+    { label: "Manage Users", path: "/dashboard/manage-users", icon: <FaUsers /> },
+    { label: "Manage Tasks", path: "/dashboard/manage-tasks", icon: <FaUserShield /> },
   ];
 
   let menuItems = [];
-
   if (role === "worker") menuItems = workerMenu;
   if (role === "buyer") menuItems = buyerMenu;
   if (role === "admin") menuItems = adminMenu;
@@ -104,9 +96,10 @@ const DashboardLayout = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="block p-3 rounded hover:bg-indigo-700"
+                className="flex items-center gap-3 p-3 rounded hover:bg-indigo-700 transition"
               >
-                {sidebarOpen ? item.label : item.label[0]}
+                <span className="text-lg">{item.icon}</span>
+                {sidebarOpen && <span>{item.label}</span>}
               </Link>
             ))}
           </nav>
