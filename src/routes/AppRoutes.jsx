@@ -111,6 +111,9 @@ import Withdrawals from "../pages/Dashboard/worker/Withdrawals";
 
 import BuyerRoute from "./BuyerRoutes";
 import WorkerRoute from "./WorkerRoutes";
+import AdminHome from "../pages/Dashboard/admin/AdminHome";
+import ManageUsers from "../pages/Dashboard/admin/ManageUsers";
+import ManageTasks from "../pages/Dashboard/admin/ManageTasks";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {
@@ -198,6 +201,30 @@ export const router = createBrowserRouter([
         path: "withdrawals",
         element: <WorkerRoute><Withdrawals /></WorkerRoute>,
       },
+      //admin route
+    {
+      path: "admin-home",
+      element: 
+        <AdminRoute>
+          <AdminHome/>
+        </AdminRoute>
+      },
+    {
+      path: "manage-users",
+      element:
+        <AdminRoute>
+          <ManageUsers />
+        </AdminRoute>
+      
+    },
+    {
+      path: "manage-tasks",
+      element: 
+        <AdminRoute>
+          <ManageTasks/>
+        </AdminRoute>
+    }
+    
     ],
   },
 ]);
