@@ -1,4 +1,3 @@
-// src/pages/dashboard/worker/WorkerHome.jsx
 import { useEffect, useState } from "react";
 import { getWorkerStats } from "../../../api/workerApi";
 

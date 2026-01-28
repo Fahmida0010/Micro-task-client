@@ -10,7 +10,8 @@ import {
 import { auth } from "../firebase/firebase.config";
 import axios from "../hooks/useAxiosSecure";
 
-const AuthContext = createContext();
+
+export const AuthContext = createContext(); 
 const provider = new GoogleAuthProvider();
 
 export const AuthProvider = ({ children }) => {
@@ -48,9 +49,10 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, register, login, googleLogin, logout }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+export default AuthProvider;

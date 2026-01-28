@@ -3,7 +3,7 @@ import workers from "../../data/workers";
 
 const BestWorkers = () => {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-green-200">
       <h2 className="text-3xl font-bold text-center mb-10">
         🏆 Top Workers
       </h2>
@@ -13,7 +13,7 @@ const BestWorkers = () => {
           <motion.div
             key={i}
             whileHover={{ scale: 1.05 }}
-            className="p-6 border rounded-lg text-center shadow"
+            className="p-6 bg-pink-200 rounded-lg text-center shadow"
           >
             <img
               src={worker.photo}

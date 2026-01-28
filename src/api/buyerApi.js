@@ -1,4 +1,3 @@
-// src/api/buyerApi.js
 import axiosSecure from "../hooks/useAxiosSecure";
 
 export const getBuyerStats = () => axiosSecure.get("/buyer/stats");

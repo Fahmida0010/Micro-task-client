@@ -1,4 +1,3 @@
-// src/pages/dashboard/worker/MySubmissions.jsx
 import { useEffect, useState } from "react";
 import { getMySubmissions } from "../../../api/workerApi";
 

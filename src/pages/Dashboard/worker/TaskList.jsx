@@ -1,4 +1,3 @@
-// src/pages/dashboard/worker/TaskList.jsx
 import { useEffect, useState } from "react";
 import { getTasks, submitTask } from "../../../api/workerApi";
 import { useNavigate } from "react-router-dom";

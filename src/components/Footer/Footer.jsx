@@ -11,7 +11,7 @@ const Footer = () => {
 
         {/* Slogan */}
         <p className="text-pink-500 text-2xl mb-6 max-w-md mx-auto italic">
-          Empowering your micro-tasks journey.
+          Empowering your micro-tasks journey towards success.
         </p>
         <div className="flex justify-center gap-6 mb-8">
           <a 

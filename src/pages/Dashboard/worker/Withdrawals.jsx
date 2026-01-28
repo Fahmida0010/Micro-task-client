@@ -1,4 +1,3 @@
-// src/pages/dashboard/worker/Withdrawals.jsx
 import { useEffect, useState } from "react";
 import { withdrawCoin, getWorkerCoin } from "../../../api/workerApi";
 
