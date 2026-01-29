@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { withdrawCoin, getWorkerCoin } from "../../../api/workerApi";
+import axios from "axios";
 
 const Withdrawals = () => {
   const [coin, setCoin] = useState(0);
@@ -8,14 +8,24 @@ const Withdrawals = () => {
 
   useEffect(() => {
     const email = localStorage.getItem("user-email");
-    getWorkerCoin(email).then(res => setCoin(res.data.coin));
+
+    axios
+      .get(`http://localhost:3000/worker-coin/${email}`)
+      .then(res => setCoin(res.data.coin))
+      .catch(err => console.log(err));
+
   }, []);
 
   const handleWithdraw = () => {
-    if (withdraw * 20 > coin) return alert("Insufficient Coin");
+
+    if (withdraw * 20 > coin) {
+      return alert("Insufficient Coin");
+    }
+
     const email = localStorage.getItem("user-email");
     const name = localStorage.getItem("user-name");
-    withdrawCoin({
+
+    const withdrawInfo = {
       worker_email: email,
       worker_name: name,
       withdrawal_coin: withdraw * 20,
@@ -23,35 +33,62 @@ const Withdrawals = () => {
       payment_system: system,
       withdraw_date: new Date(),
       status: "pending",
-    }).then(() => alert("Withdrawal Requested"));
+    };
+
+    axios
+      .post("http://localhost:3000/withdraw", withdrawInfo)
+      .then(() => {
+        alert("Withdrawal Requested");
+
+        // update coin instantly in UI
+        setCoin(prev => prev - withdrawInfo.withdrawal_coin);
+        setWithdraw(0);
+      })
+      .catch(err => console.log(err));
   };
 
   return (
-    <div>
+    <div className="p-4">
+
       <h2 className="text-2xl font-bold mb-4">Withdraw Coins</h2>
-      <p>Available Coin: {coin}</p>
-      <p>Withdraw Amount ($): {withdraw}</p>
+
+      <p className="mb-1">Available Coin: <b>{coin}</b></p>
+      <p className="mb-3">Withdraw Amount ($): <b>{withdraw}</b></p>
+
       <input
+        className="border p-2 rounded mr-2"
         type="number"
         value={withdraw}
         min={0}
         onChange={(e) => setWithdraw(Number(e.target.value))}
         placeholder="Enter amount in $"
       />
-      <select value={system} onChange={(e) => setSystem(e.target.value)}>
+
+      <select
+        className="border p-2 rounded mr-2"
+        value={system}
+        onChange={(e) => setSystem(e.target.value)}
+      >
         <option>Bkash</option>
         <option>Rocket</option>
         <option>Nagad</option>
         <option>Stripe</option>
       </select>
+
       <button
         disabled={coin < 200}
         onClick={handleWithdraw}
-        className="ml-2 bg-green-500 px-3 py-1 rounded text-white"
+        className="bg-green-500 px-4 py-2 rounded text-white disabled:bg-gray-400"
       >
         Withdraw
       </button>
-      {coin < 200 && <p className="text-red-500 mt-2">Insufficient coin</p>}
+
+      {coin < 200 && (
+        <p className="text-red-500 mt-2">
+          Minimum 200 coin required to withdraw
+        </p>
+      )}
+
     </div>
   );
 };
