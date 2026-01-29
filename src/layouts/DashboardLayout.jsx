@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useAuth } from "../context/AuthProvider";
 import axiosSecure from "../hooks/useAxiosSecure";
+import Loading from "../components/Loader/Loading";
 
 
 const DashboardLayout = () => {
@@ -41,7 +42,7 @@ const DashboardLayout = () => {
   }, [user, loading, isLoading, dbUser, location.pathname, navigate]);
 
   if (loading || isLoading) {
-    return <div className="p-10 text-center">Loading...</div>;
+    return <Loading/>
   }
   if (!user) return null;
 
