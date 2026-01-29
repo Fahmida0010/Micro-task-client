@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import workers from "../../data/workers";
 
+
 const BestWorkers = () => {
   return (
     <section className="py-16 bg-green-200">
-      <h2 className="text-3xl font-bold text-center mb-10">
-        🏆 Top Workers
-      </h2>
+      <h2 className="text-3xl font-bold text-center mb-10 flex items-center justify-center gap-3">
+    Top Workers ⭐
+             </h2>
 
       <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {workers.slice(0, 6).map((worker, i) => (

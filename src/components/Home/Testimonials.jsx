@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import testimonials from "../../data/testimonials";
 import "swiper/css";
 
-// Optional: assign colors to cards
+
 const cardColors = [
   "bg-indigo-300 text-indigo-800",
   "bg-green-300 text-green-800",

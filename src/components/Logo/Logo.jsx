@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router';
-import logo from "../../assets/images/pencil.jpg"
+// import logo from "../../assets/images/logo.png"
+ import logo from "../../assets/images/ecommerce.png"
 
 
 const Logo = () => {
