@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import axiosSecure from "../../../hooks/useAxiosSecure";
 
 const WorkerHome = () => {
   const [stats, setStats] = useState({});
@@ -7,8 +8,8 @@ const WorkerHome = () => {
   useEffect(() => {
     const email = localStorage.getItem("user-email");
 
-    axios
-      .get(`http://localhost:3000/worker-stats/${email}`)
+    axiosSecure
+      .get(`/worker-stats/${email}`)
       .then(res => setStats(res.data))
       .catch(err => console.log(err));
 

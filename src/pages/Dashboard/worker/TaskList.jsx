@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import axiosSecure from "../../../hooks/useAxiosSecure";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
 
-    axios
-      .get("http://localhost:5000/tasks")
+    axiosSecure
+      .get("/tasks")
       .then(res => setTasks(res.data))
       .catch(err => console.log(err));
 
@@ -34,8 +35,8 @@ const TaskList = () => {
       date: new Date(),
     };
 
-    axios
-      .post("http://localhost:5000/task-submit", submitInfo)
+    axiosSecure
+      .post("/task-submit", submitInfo)
       .then(() => alert("Submission Added"))
       .catch(err => console.log(err));
   };

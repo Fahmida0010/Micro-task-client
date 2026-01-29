@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import axiosSecure from "../../../hooks/useAxiosSecure";
 
 const MySubmissions = () => {
   const [subs, setSubs] = useState([]);
@@ -7,8 +8,8 @@ const MySubmissions = () => {
   useEffect(() => {
     const email = localStorage.getItem("user-email");
 
-    axios
-      .get(`http://localhost:3000/my-submissions/${email}`)
+    axiosSecure
+      .get(`/my-submissions/${email}`)
       .then(res => setSubs(res.data))
       .catch(err => console.log(err));
 

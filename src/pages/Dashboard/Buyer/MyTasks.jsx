@@ -8,7 +8,7 @@ const MyTasks = () => {
   // fetch tasks
   const fetchTasks = async () => {
     try {
-      const res = await axiosSecure.get("/tasks/my"); // JWT already in axiosSecure
+      const res = await axiosSecure.get("/tasks/my"); 
       setTasks(res.data);
     } catch (err) {
       console.error(err.response || err);

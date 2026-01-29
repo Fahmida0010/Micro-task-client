@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import axiosSecure from "../../../hooks/useAxiosSecure";
 
 const Withdrawals = () => {
   const [coin, setCoin] = useState(0);
@@ -9,8 +10,8 @@ const Withdrawals = () => {
   useEffect(() => {
     const email = localStorage.getItem("user-email");
 
-    axios
-      .get(`http://localhost:3000/worker-coin/${email}`)
+    axiosSecure
+      .get(`/worker-coin/${email}`)
       .then(res => setCoin(res.data.coin))
       .catch(err => console.log(err));
 
@@ -35,8 +36,8 @@ const Withdrawals = () => {
       status: "pending",
     };
 
-    axios
-      .post("http://localhost:3000/withdraw", withdrawInfo)
+    axiosSecure
+      .post("/withdraw", withdrawInfo)
       .then(() => {
         alert("Withdrawal Requested");
 

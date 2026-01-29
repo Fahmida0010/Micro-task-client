@@ -116,6 +116,8 @@ import ManageUsers from "../pages/Dashboard/admin/ManageUsers";
 import ManageTasks from "../pages/Dashboard/admin/ManageTasks";
 import AdminRoute from "./AdminRoutes";
 import NotFound from "../pages/NotFound/NotFound";
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
+import PaymentFailed from "../pages/payment/PaymentFailed";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {
@@ -231,5 +233,13 @@ export const router = createBrowserRouter([
      {
   path: "*",
   element: <NotFound/>
+},
+  {
+  path: "payment-success",
+  element: <PaymentSuccess/>
+},
+  {
+  path: "payment-failed",
+  element: <PaymentFailed/>
 }
 ]);

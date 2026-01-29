@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { useAuth } from "../../../context/AuthProvider";
 import axiosSecure from "../../../hooks/useAxiosSecure";
+import axios from "axios";
 
 
 const imgbbKey = import.meta.env.VITE_IMGBB_KEY;
@@ -42,10 +43,11 @@ const apiUrl = import.meta.env.VITE_API_URL;
       setLoading(false);
       return;
     }
-    console.log(task)
+   
 
-    const task = {
-      buyerId: user._id,
+ const task = {
+  Buyer_email: user.email,
+  Buyer_name: user.displayName || "Buyer",
       title: form.title.value,
       detail: form.detail.value,
       required_workers: Number(form.workers.value),
@@ -58,15 +60,22 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
     const totalPay = task.required_workers * task.payable_amount;
 
-    if (totalPay > user.coin) {
-      alert("Not enough coins. Purchase coins!");
-      navigate("/dashboard/purchase-coin");
-      setLoading(false);
-      return;
-    }
+    // if (totalPay > user.coin) {
+    //   alert("Not enough coins. Purchase coins!");
+    //   navigate("/dashboard/purchase-coin");
+    //   setLoading(false);
+    //   return;
+    // }
+  if (totalPay > user.coin) {
+  toast.error("Not enough coins. Please purchase coins!");
+  setLoading(false);
+  setTimeout(() => navigate("/dashboard/purchase-coin"), 100);
+  return;
+}
+
 
     try {
-      const res = await axiosSecure.post(`${apiUrl}/tasks`, task);
+      const res = await axiosSecure.post(`/tasks`, task);
       toast.success("Task added successfully!");
       navigate("/dashboard/my-tasks");
     } catch (err) {
