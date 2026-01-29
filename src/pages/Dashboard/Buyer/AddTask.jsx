@@ -4,6 +4,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { useAuth } from "../../../context/AuthProvider";
 import axiosSecure from "../../../hooks/useAxiosSecure";
 
+
 const imgbbKey = import.meta.env.VITE_IMGBB_KEY;
 const apiUrl = import.meta.env.VITE_API_URL; 
 
@@ -41,6 +42,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
       setLoading(false);
       return;
     }
+    console.log(task)
 
     const task = {
       buyerId: user._id,

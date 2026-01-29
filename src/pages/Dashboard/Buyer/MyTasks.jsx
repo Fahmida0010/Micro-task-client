@@ -1,23 +1,14 @@
-// src/pages/dashboard/buyer/MyTasks.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { useAuth } from "../../../context/AuthProvider";
 import { toast, Toaster } from "react-hot-toast";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import axiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyTasks = () => {
-  const { user, token } = useAuth(); // assume token is stored in context
   const [tasks, setTasks] = useState([]);
 
   // fetch tasks
   const fetchTasks = async () => {
     try {
-      const res = await axios.get(`${apiUrl}/tasks/my`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axiosSecure.get("/tasks/my"); // JWT already in axiosSecure
       setTasks(res.data);
     } catch (err) {
       console.error(err.response || err);
@@ -34,11 +25,9 @@ const MyTasks = () => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
 
     try {
-      await axios.delete(`${apiUrl}/tasks/${taskId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosSecure.delete(`/tasks/${taskId}`); // JWT auto
       toast.success("Task deleted successfully");
-      fetchTasks(); // refresh list
+      fetchTasks(); // refresh tasks
     } catch (err) {
       console.error(err.response || err);
       toast.error("Failed to delete task");
@@ -46,7 +35,7 @@ const MyTasks = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 pt-20">
       <Toaster position="top-right" />
       <h2 className="text-2xl font-bold mb-6">My Tasks</h2>
       <div className="overflow-x-auto bg-white rounded-lg shadow">
@@ -62,7 +51,9 @@ const MyTasks = () => {
           <tbody>
             {tasks.length === 0 ? (
               <tr>
-                <td colSpan="4" className="p-4 text-center text-gray-500">No tasks found</td>
+                <td colSpan="4" className="p-4 text-center text-gray-500">
+                  No tasks found
+                </td>
               </tr>
             ) : (
               tasks.map((t) => (
