@@ -1,27 +1,36 @@
 import { useEffect, useState } from "react";
-import { getMySubmissions } from "../../../api/workerApi";
+import axios from "axios";
 
 const MySubmissions = () => {
   const [subs, setSubs] = useState([]);
 
   useEffect(() => {
     const email = localStorage.getItem("user-email");
-    getMySubmissions(email).then(res => setSubs(res.data));
+
+    axios
+      .get(`http://localhost:3000/my-submissions/${email}`)
+      .then(res => setSubs(res.data))
+      .catch(err => console.log(err));
+
   }, []);
 
   return (
-    <div>
+    <div className="p-4">
+
       <h2 className="text-2xl font-bold mb-4">My Submissions</h2>
+
       <table className="w-full border">
-        <thead>
+
+        <thead className="bg-gray-200">
           <tr>
-            <th>Task</th>
-            <th>Pay</th>
-            <th>Buyer</th>
-            <th>Status</th>
-            <th>Date</th>
+            <th className="border p-2">Task</th>
+            <th className="border p-2">Pay</th>
+            <th className="border p-2">Buyer</th>
+            <th className="border p-2">Status</th>
+            <th className="border p-2">Date</th>
           </tr>
         </thead>
+
         <tbody>
           {subs.map(sub => (
             <tr
@@ -34,15 +43,33 @@ const MySubmissions = () => {
                   : "bg-red-100"
               }
             >
-              <td>{sub.task_title}</td>
-              <td>{sub.payable_amount}</td>
-              <td>{sub.Buyer_name}</td>
-              <td>{sub.status}</td>
-              <td>{new Date(sub.date).toLocaleDateString()}</td>
+
+              <td className="border p-2">
+                {sub.task_title}
+              </td>
+
+              <td className="border p-2">
+                ${sub.payable_amount}
+              </td>
+
+              <td className="border p-2">
+                {sub.Buyer_name}
+              </td>
+
+              <td className="border p-2 font-semibold">
+                {sub.status}
+              </td>
+
+              <td className="border p-2">
+                {new Date(sub.date).toLocaleDateString()}
+              </td>
+
             </tr>
           ))}
         </tbody>
+
       </table>
+
     </div>
   );
 };
