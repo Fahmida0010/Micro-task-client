@@ -115,6 +115,7 @@ import AdminHome from "../pages/Dashboard/admin/AdminHome";
 import ManageUsers from "../pages/Dashboard/admin/ManageUsers";
 import ManageTasks from "../pages/Dashboard/admin/ManageTasks";
 import AdminRoute from "./AdminRoutes";
+import NotFound from "../pages/NotFound/NotFound";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {
@@ -224,8 +225,11 @@ export const router = createBrowserRouter([
         <AdminRoute>
           <ManageTasks/>
         </AdminRoute>
-    }
-    
+    },    
     ],
   },
+     {
+  path: "*",
+  element: <NotFound/>
+}
 ]);
