@@ -5,16 +5,14 @@ import { useAuth } from "../../../context/AuthProvider";
 import axiosSecure from "../../../hooks/useAxiosSecure";
 import axios from "axios";
 
-
 const imgbbKey = import.meta.env.VITE_IMGBB_KEY;
-const apiUrl = import.meta.env.VITE_API_URL; 
 
- const AddTask = () => {
-  const { user } = useAuth();
+const AddTask = () => {
+  const { user , refetchUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-    const handleAdd = async (e) => {
 
+  const handleAdd = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -27,7 +25,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
       return;
     }
 
-    // Upload image to imgbb
+    // Upload image
     let imageUrl = "";
     const formData = new FormData();
     formData.append("image", imageFile);
@@ -43,11 +41,10 @@ const apiUrl = import.meta.env.VITE_API_URL;
       setLoading(false);
       return;
     }
-   
 
- const task = {
-  Buyer_email: user.email,
-  Buyer_name: user.displayName || "Buyer",
+    const task = {
+      Buyer_email: user.email,
+      Buyer_name: user.displayName || "Buyer",
       title: form.title.value,
       detail: form.detail.value,
       required_workers: Number(form.workers.value),
@@ -56,54 +53,97 @@ const apiUrl = import.meta.env.VITE_API_URL;
       submission_info: form.submission.value,
       task_image_url: imageUrl,
     };
-     console.log("Task to send:", task);
-
-    const totalPay = task.required_workers * task.payable_amount;
-
-    // if (totalPay > user.coin) {
-    //   alert("Not enough coins. Purchase coins!");
-    //   navigate("/dashboard/purchase-coin");
-    //   setLoading(false);
-    //   return;
-    // }
-  if (totalPay > user.coin) {
-  toast.error("Not enough coins. Please purchase coins!");
-  setLoading(false);
-  setTimeout(() => navigate("/dashboard/purchase-coin"), 100);
-  return;
-}
-
 
     try {
-      const res = await axiosSecure.post(`/tasks`, task);
-      toast.success("Task added successfully!");
-      navigate("/dashboard/my-tasks");
-    } catch (err) {
-      console.error(err.response || err);
-      toast.error(err.response?.data?.message || "Failed to add task!");
-    }
+      await axiosSecure.post("/tasks", task);
 
-    setLoading(false);
+      toast.success("Task added successfully!");
+      await refetchUser();
+
+      navigate("/dashboard/my-tasks");
+
+    } catch (err) {
+
+      if (err.response?.status === 400) {
+        toast.error("Not enough coins, Purchase coins !");
+        toast.error("Not enough coins, Purchase coins !");
+        navigate("/dashboard/purchase-coin");
+      } else {
+        toast.error("Failed to add task!");
+      }
+
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow rounded">
       <Toaster position="top-right" />
-      <h2 className="text-2xl font-bold mb-6">Add New Task</h2>
+
+      <h2 className="text-2xl font-bold mb-6 mt-8">Add New Task</h2>
 
       <form onSubmit={handleAdd} className="space-y-4">
-        <input name="title" placeholder="Task Title" required className="w-full p-3 border rounded" />
-        <textarea name="detail" placeholder="Task Details" className="w-full p-3 border rounded h-24" />
+
+        <input
+          name="title"
+          placeholder="Task Title"
+          required
+          className="w-full p-3 border rounded"
+        />
+
+        <textarea
+          name="detail"
+          placeholder="Task Details"
+          className="w-full p-3 border rounded h-24"
+        />
+
         <div className="grid grid-cols-2 gap-4">
-          <input name="workers" type="number" placeholder="Required Workers" required className="p-3 border rounded" />
-          <input name="amount" type="number" placeholder="Payable Amount" required className="p-3 border rounded" />
+          <input
+            name="workers"
+            type="number"
+            placeholder="Required Workers"
+            required
+            className="p-3 border rounded"
+          />
+
+          <input
+            name="amount"
+            type="number"
+            placeholder="Payable Amount"
+            required
+            className="p-3 border rounded"
+          />
         </div>
-        <input name="date" type="date" required className="w-full p-3 border rounded" />
-        <input name="submission" placeholder="Submission Info" className="w-full p-3 border rounded" />
-        <input name="image" type="file" accept="image/*" required className="w-full p-3 border rounded" />
-        <button className="w-full bg-indigo-600 text-white py-3 rounded hover:bg-indigo-700">
-        Add Task
+
+        <input
+          name="date"
+          type="date"
+          required
+          className="w-full p-3 border rounded"
+        />
+
+        <input
+          name="submission"
+          placeholder="Submission Info"
+          className="w-full p-3 border rounded"
+        />
+
+        <input
+          name="image"
+          type="file"
+          accept="image/*"
+          required
+          className="w-full p-3 border rounded"
+        />
+
+        <button
+          disabled={loading}
+          className="w-full bg-indigo-600 text-white py-3 rounded hover:bg-indigo-700 disabled:opacity-50"
+        >
+          {loading ? "Adding Task..." : "Add Task"}
         </button>
+
       </form>
     </div>
   );

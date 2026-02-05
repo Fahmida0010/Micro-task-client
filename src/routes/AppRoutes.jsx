@@ -1,93 +1,3 @@
-// import { createBrowserRouter, Navigate } from "react-router-dom";
-// import { useQuery } from "@tanstack/react-query";
-// import axios from "axios";
-// import { useAuth } from "../context/AuthProvider"; 
-
-// import BasicLayout from "../layouts/BasicLayout";
-// import DashboardLayout from "../layouts/DashboardLayout";
-
-// import Home from "../pages/Home";
-// import Login from "../pages/Login";
-// import Register from "../pages/Register";
-// import BuyerHome from "../pages/Dashboard/Buyer/BuyerHome";
-// import MyTasks from "../pages/Dashboard/Buyer/MyTasks";
-// import AddTask from "../pages/Dashboard/Buyer/AddTask";
-// import PurchaseCoin from "../pages/Dashboard/Buyer/PurchaseCoin";
-// import PaymentHistory from "../pages/Dashboard/Buyer/PaymentHistory";
-// import WorkerHome from "../pages/Dashboard/worker/WorkerHome";
-// import TaskList from "../pages/Dashboard/worker/TaskList";
-// import MySubmissions from "../pages/Dashboard/worker/MySubmissions";
-// import Withdrawals from "../pages/Dashboard/worker/Withdrawals";
-// import BuyerRoute from "./BuyerRoutes";
-// import WorkerRoute from "./WorkerRoutes";
-// import axiosSecure from "../hooks/useAxiosSecure";
-
-
-// // DashboardRedirect এর ভেতর queryFn
-// queryFn: async () => {
-//   const res = await axiosSecure.get(`/users/${authUser.email}`);
-//   return res.data;
-// },
-
-// export const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <BasicLayout />,
-//     children: [
-//       { index: true, element: <Home /> },
-//       { path: "login", element: <Login /> },
-//       { path: "register", element: <Register /> },
-//     ],
-//   },
-//   {
-//     path: "dashboard",
-//     element: <DashboardLayout />,
-//     children: [
-//       {
-//         index: true,
-//         element: <DashboardRedirect />,
-//       },
-//       {
-//         path: "buyer-home",
-//         element: <BuyerRoute><BuyerHome /></BuyerRoute>,
-//       },
-//       {
-//         path: "my-tasks",
-//         element: <BuyerRoute><MyTasks /></BuyerRoute>,
-//       },
-//       {
-//         path: "add-task",
-//         element: <BuyerRoute><AddTask /></BuyerRoute>,
-//       },
-//       {
-//         path: "purchase-coin",
-//         element: <BuyerRoute><PurchaseCoin /></BuyerRoute>,
-//       },
-//       {
-//         path: "payment-history",
-//         element: <BuyerRoute><PaymentHistory /></BuyerRoute>,
-//       },
-//       {
-//         path: "worker-home",
-//         element: <WorkerRoute><WorkerHome /></WorkerRoute>,
-//       },
-//       {
-//         path: "task-list",
-//         element: <WorkerRoute><TaskList /></WorkerRoute>,
-//       },
-//       {
-//         path: "my-submissions",
-//         element: <WorkerRoute><MySubmissions /></WorkerRoute>,
-//       },
-//       {
-//         path: "withdrawals",
-//         element: <WorkerRoute><Withdrawals /></WorkerRoute>,
-//       },
-//     ],
-//   },
-// ]);
-
-
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthProvider"; 
@@ -118,6 +28,7 @@ import AdminRoute from "./AdminRoutes";
 import NotFound from "../pages/NotFound/NotFound";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import PaymentFailed from "../pages/payment/PaymentFailed";
+import TaskDetails from "../pages/Dashboard/worker/TaskDetails";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {
@@ -196,6 +107,10 @@ export const router = createBrowserRouter([
       {
         path: "task-list",
         element: <WorkerRoute><TaskList /></WorkerRoute>,
+      },
+        {
+        path: "task-details/:id",
+        element: <WorkerRoute><TaskDetails /></WorkerRoute>,
       },
       {
         path: "my-submissions",

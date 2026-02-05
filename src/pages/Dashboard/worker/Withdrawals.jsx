@@ -51,7 +51,8 @@ const Withdrawals = () => {
   return (
     <div className="p-4">
 
-      <h2 className="text-2xl font-bold mb-4">Withdraw Coins</h2>
+      <h2 className="text-2xl font-bold mt-12
+       mb-4">Withdraw Coins</h2>
 
       <p className="mb-1">Available Coin: <b>{coin}</b></p>
       <p className="mb-3">Withdraw Amount ($): <b>{withdraw}</b></p>

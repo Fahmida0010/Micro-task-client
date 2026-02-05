@@ -21,6 +21,7 @@ const PaymentFailed = () => {
         </button>
       </div>
     </div>
+    
   );
 };
 

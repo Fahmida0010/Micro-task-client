@@ -1,5 +1,6 @@
 import { toast, Toaster } from "react-hot-toast";
 import axiosSecure from "../../../hooks/useAxiosSecure";
+import { useAuth } from "../../../context/AuthProvider";
 
 
 const packages = [
@@ -10,10 +11,18 @@ const packages = [
 ];
 
 const PurchaseCoin = () => {
-
+const { user } = useAuth();
   const handlePay = async (pkg) => {
+      if (!user) {
+    toast.error("User not logged in");
+    return;
+  }
+
+  console.log("Starting payment for:", pkg);
+  console.log("User email:", user.email);
     try {
       const res = await axiosSecure.post("/create-checkout-session", {
+        userEmail: user.email,
         coin: pkg.coin,
         price: pkg.price,
       });

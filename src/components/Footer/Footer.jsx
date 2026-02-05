@@ -1,74 +1,12 @@
-// import { FaLinkedin, FaGithub, FaFacebook, FaXTwitter } from "react-icons/fa6";
-// import Logo from "../Logo/Logo";
-
-// const Footer = () => {
-//   return (
-//     <footer className="mt-16 bg-yellow-200 py-10 px-4">
-//       <div className="max-w-6xl mx-auto text-center">
-//         <div className="flex justify-center mb-2">
-//           <Logo />
-//         </div>
-
-//         {/* Slogan */}
-//         <p className="text-pink-500 text-2xl mb-6 max-w-md mx-auto italic">
-//           Empowering your micro-tasks journey towards success.
-//         </p>
-//         <div className="flex justify-center gap-6 mb-8">
-//           <a 
-//             href="https://www.linkedin.com/in/fahmida-akter-tanjina-3b1986299/" 
-//             target="_blank" 
-//             rel="noopener noreferrer"
-//             className="text-2xl text-gray-600 hover:text-[#0077b5] transition-all duration-300 hover:-translate-y-1"
-//           >
-//             <FaLinkedin />
-//           </a>
-//           <a 
-//             href="https://github.com/Fahmida0010" 
-//             target="_blank" 
-//             rel="noopener noreferrer"
-//             className="text-2xl text-gray-600 hover:text-[#333] transition-all duration-300 hover:-translate-y-1"
-//           >
-//             <FaGithub />
-//           </a>
-//           <a 
-//             href="https://www.facebook.com/nihsanga.cetana" 
-//             target="_blank" 
-//             rel="noopener noreferrer"
-//             className="text-2xl text-gray-600 hover:text-[#1877f2] transition-all duration-300 hover:-translate-y-1"
-//           >
-//             <FaFacebook />
-//           </a>
-//           <a 
-//             href="https://x.com/fahmida105623" 
-//             target="_blank" 
-//             rel="noopener noreferrer"
-//             className="text-2xl text-gray-600 hover:text-black transition-all duration-300 hover:-translate-y-1"
-//           >
-//             <FaXTwitter />
-//           </a>
-//         </div>
-        
-//         {/* Copyright */}
-//         <div className="text-sm text-black">
-//           © {new Date().getFullYear()}
-//            <span className="p-2 font-semibold text-green-600">
-//             MicroTask</span>All rights reserved.
-//         </div>
-//       </div>
-//     </footer>
-//   );
-// };
-
-// export default Footer;
-
-
 import { FaLinkedin, FaGithub, FaFacebook, FaXTwitter } from "react-icons/fa6";
 import Logo from "../Logo/Logo";
 
 const Footer = () => {
   return (
-    <footer className="mt-16 bg-yellow-200 py-12 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+    <footer className="mt-16 bg-yellow-200 
+    py-12 px-4">
+      <div className="grid grid-cols-1
+       md:grid-cols-4 gap-8 text-center md:text-left">
         
         {/* Logo & Slogan */}
         <div className="md:col-span-1">
@@ -115,8 +53,8 @@ const Footer = () => {
         </div>
 
         {/* Quick Links */}
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+        <div className="mx-8"> 
+          <h3 className="text-xl font-semibold mb-4 ">Quick Links</h3>
           <ul className="space-y-2 text-gray-700">
             <li><a href="#home" className="hover:text-indigo-600 transition">Home</a></li>
             <li><a href="#about" className="hover:text-indigo-600 transition">About Us</a></li>

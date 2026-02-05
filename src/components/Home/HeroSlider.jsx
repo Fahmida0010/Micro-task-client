@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { motion } from "framer-motion";
 import "swiper/css";
-import slide1 from "../../assets/images/job.jpg";
+import slide1 from "../../assets/images/colleagues.jpg"
 import slide2 from "../../assets/images/need.jpg";
 import slide3 from "../../assets/images/scenery.jpg";
 
