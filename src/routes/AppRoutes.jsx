@@ -29,6 +29,7 @@ import NotFound from "../pages/NotFound/NotFound";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import PaymentFailed from "../pages/payment/PaymentFailed";
 import TaskDetails from "../pages/Dashboard/worker/TaskDetails";
+import UpdateTask from "../pages/Dashboard/Buyer/UpdateTask";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {
@@ -86,6 +87,10 @@ export const router = createBrowserRouter([
       {
         path: "my-tasks",
         element: <BuyerRoute><MyTasks /></BuyerRoute>,
+      },
+        {
+        path: "updatetask/:id",
+        element: <BuyerRoute><UpdateTask /></BuyerRoute>,
       },
       {
         path: "add-task",
