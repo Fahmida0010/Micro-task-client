@@ -2,7 +2,6 @@ import { toast, Toaster } from "react-hot-toast";
 import axiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuth } from "../../../context/AuthProvider";
 
-
 const packages = [
   { coin: 10, price: 1 },
   { coin: 150, price: 10 },
@@ -11,27 +10,24 @@ const packages = [
 ];
 
 const PurchaseCoin = () => {
-const { user } = useAuth();
-  const handlePay = async (pkg) => {
-      if (!user) {
-    toast.error("User not logged in");
-    return;
-  }
+  const { user } = useAuth();
 
-  console.log("Starting payment for:", pkg);
-  console.log("User email:", user.email);
+  const handlePay = async (pkg) => {
+    if (!user) {
+      toast.error("User not logged in");
+      return;
+    }
+
     try {
       const res = await axiosSecure.post("/create-checkout-session", {
-        userEmail: user.email,
+        email: user.email, // key must match backend
         coin: pkg.coin,
         price: pkg.price,
       });
 
-      // Stripe checkout redirect
-      window.location.href = res.data.url;
-
+      window.location.href = res.data.url; // redirect to Stripe
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Payment initialization failed");
     }
   };
@@ -47,21 +43,15 @@ const { user } = useAuth();
             key={p.coin}
             className="border border-indigo-200 p-6 text-center rounded-lg bg-white shadow-lg hover:shadow-xl transition"
           >
-            <h3 className="text-2xl font-bold text-indigo-600 mb-2">
-              {p.coin}
-            </h3>
-
+            <h3 className="text-2xl font-bold text-indigo-600 mb-2">{p.coin}</h3>
             <p className="text-gray-600 mb-4">Coins</p>
-
-            <p className="text-3xl font-bold text-green-600 mb-4">
-              ${p.price}
-            </p>
+            <p className="text-3xl font-bold text-green-600 mb-4">${p.price}</p>
 
             <button
               onClick={() => handlePay(p)}
               className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 font-semibold"
             >
-              Pay 
+              Pay
             </button>
           </div>
         ))}

@@ -50,7 +50,7 @@ const ManageUsers = () => {
         mt-10 font-extrabold text-indigo-800 flex items-center gap-3 drop-shadow-sm">
           <FaUserShield className="text-indigo-600 text-4xl" /> Manage Users
         </h2>
-        <span className="bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-5 py-2 rounded-full font-bold shadow-sm text-sm sm:text-base">
+        <span className="bg-purple-200 text-indigo-800 px-5 py-2 rounded-full font-bold shadow-sm text-sm sm:text-base">
           Total: {users.length}
         </span>
       </div>

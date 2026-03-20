@@ -3,31 +3,41 @@ import { FaTrashAlt, FaTasks, FaUsers, FaDollarSign } from "react-icons/fa";
 import Swal from "sweetalert2";
 import axiosSecure from "../../../hooks/useAxiosSecure";
 
+
 const ManageTasks = () => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    axiosSecure.get("/tasks").then((res) => setTasks(res.data));
+    axiosSecure.get("/managetasks").then((res) => setTasks(res.data));
   }, []);
 
   const handleDelete = (email) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This task will be removed permanently!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosSecure.delete(`/tasks/${email}`).then(() => {
-          setTasks(tasks.filter((t) => t._email !==email));
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This task will be removed permanently!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#ef4444",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axiosSecure.delete(`/tasks/${email}`)
+        .then(() => {
+          setTasks(tasks.filter((task) => task.Buyer_email !== email)); // fixed
           Swal.fire("Deleted!", "The task has been deleted.", "success");
+        })
+        .catch((err) => {
+          console.error(err.response?.data || err);
+          Swal.fire(
+            "Error",
+            err.response?.data?.message || "Delete failed",
+            "error"
+          );
         });
-      }
-    });
-  };
+    }
+  });
+};
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -48,21 +58,21 @@ const ManageTasks = () => {
           <table className="w-full text-left">
             <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
               <tr>
-  <th className="px-6 py-4 font-bold">Task Title</th>
-  <th className="px-6 py-4 font-bold">Buyer Name</th>
-  <th className="px-6 py-4 font-bold">Buyer Email</th>
-  <th className="px-6 py-4 font-bold text-center">Required Workers</th>
-  <th className="px-6 py-4 font-bold text-center">Payable Amount</th>
-  <th className="px-6 py-4 font-bold text-center">Action</th>
+  <th className="px-6 py-4 text-green-500 font-bold">Task Title</th>
+  <th className="px-6 py-4  text-green-500 font-bold">Buyer Name</th>
+  <th className="px-6 py-4   text-green-500 font-bold">Buyer Email</th>
+  <th className="px-6 py-4  text-green-500 font-bold text-center">Required Workers</th>
+  <th className="px-6 py-4  text-green-500 font-bold text-center">Payable Amount</th>
+  <th className="px-6 py-4  text-green-500 font-bold text-center">Action</th>
 </tr>
 
             </thead>
             <tbody className="divide-y divide-gray-100">
               {tasks.length > 0 ? (
                 tasks.map((task) => (
-                  <tr key={task._id} className="hover:bg-indigo-50/30 transition-colors">
+                  <tr key={task.Buyer_email} className="hover:bg-indigo-50/30 transition-colors">
                     <td className="px-6 py-4">
-                      <span className="font-semibold text-gray-700 block max-w-xs truncate md:max-w-md">
+                      <span className="font-semibold text-pink-700 block max-w-xs truncate md:max-w-md">
                         {task.title}
                       </span>
                     </td>
@@ -88,7 +98,7 @@ const ManageTasks = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => handleDelete(task._id)}
+                        onClick={() => handleDelete(task.Buyer_email)}
                         className="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-500 hover:text-white transition-all duration-300 active:scale-90 shadow-sm"
                         title="Delete Task"
                       >

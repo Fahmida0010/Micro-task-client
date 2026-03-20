@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import Logo from "../Logo/Logo";
@@ -11,34 +13,47 @@ const Navbar = () => {
   const [role, setRole] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  //  notification states
+  const [notifications, setNotifications] = useState([]);
+  const [openNotif, setOpenNotif] = useState(false);
+
   const dropdownRef = useRef(null);
+  const notifRef = useRef(null);
 
-  useEffect(() => {
-    if (!user?.email) return;
-
-    const fetchUser = async () => {
-      const res = await axios.get(`/user/info?email=${user.email}`);
-      setCoin(res.data.coin);
-      setRole(res.data.role);
-    };
-
-    fetchUser();
-  }, [user]);
-
-  // Close dropdown if clicked outside
+  // Close dropdown + notification if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setOpenNotif(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  //  fetch notifications + user info
+  useEffect(() => {
+    if (user?.email) {
+      axios.get(`/user/info?email=${user.email}`).then((res) => {
+        setCoin(res.data.coin);
+        setRole(res.data.role);
+      });
+
+      axios
+        .get(`/notifications/${user.email}`)
+        .then((res) => setNotifications(res.data));
+    }
+  }, [user]);
+  
+
   return (
     <nav className="bg-purple-600 text-white shadow-md fixed w-full z-50">
       <div className="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
+        
         {/* Logo */}
         <Logo />
 
@@ -60,7 +75,46 @@ const Navbar = () => {
           ) : (
             <>
               <Link to="/dashboard" className="hover:text-indigo-300">Dashboard</Link>
-              <span>💰 {coin} Coins</span>
+              <span>💰{coin} Coins</span>
+
+              {/* 🔔 Notification */}
+              <div ref={notifRef} className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenNotif(!openNotif);
+                  }}
+                  className="text-xl"
+                >
+                  🔔
+                  {notifications.length > 0 && (
+                    <span className="absolute -top-2 -right-2 
+                    bg-red-500 text-xs px-1 rounded-full">
+                      {notifications.length}
+                    </span>
+                  )}
+                </button>
+
+                {openNotif && (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute right-0 mt-2 w-80 bg-white text-black rounded shadow-lg p-3 z-50 max-h-80 overflow-y-auto"
+                  >
+                    {notifications.length > 0 ? (
+                      notifications.map((n, i) => (
+                        <div key={i} className="border-b py-2 text-sm">
+                          <p>{n.message}</p>
+                          <small className="text-gray-400">
+                            {new Date(n.createdAt).toLocaleString()}
+                          </small>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No notifications</p>
+                    )}
+                  </div>
+                )}
+              </div>
 
               {/* Profile Dropdown */}
               <div ref={dropdownRef} className="relative">
@@ -90,7 +144,47 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-3">
+
+          {/* 🔔 Mobile Notification */}
+          {user && (
+            <div ref={notifRef} className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenNotif(!openNotif);
+                }}
+              >
+                🔔
+                {notifications.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-1 rounded-full">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+
+              {openNotif && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 mt-2 w-72 bg-white text-black rounded shadow-lg p-3 z-50"
+                >
+                  {notifications.length > 0 ? (
+                    notifications.map((n, i) => (
+                      <div key={i} className="border-b py-2 text-sm">
+                        <p>{n.message}</p>
+                        <small className="text-gray-400">
+                          {new Date(n.createdAt).toLocaleString()}
+                        </small>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No notifications</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenuAlt3 className="w-6 h-6" />}
           </button>
@@ -117,26 +211,7 @@ const Navbar = () => {
             <>
               <Link to="/dashboard" className="hover:text-indigo-300">Dashboard</Link>
               <span>💰 {coin} Coins</span>
-
-              {/* Profile Dropdown */}
-              <div ref={dropdownRef} className="relative">
-                <div
-                  className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  <img
-                    src={user.photoURL}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <span>👤 {role}</span>
-                </div>
-                {dropdownOpen && (
-                  <div className="absolute bg-pink-300 right-0 mt-2 w-48 text-black rounded shadow-lg p-3 z-50">
-                    <p className="font-semibold">{user.displayName}</p>
-                    <p className="text-sm text-green-900">{user.email}</p>
-                  </div>
-                )}
-              </div>
+              <span>👤 {role}</span>
 
               <button
                 className="bg-red-500 rounded-lg px-3 py-1 hover:bg-red-600 mt-2"

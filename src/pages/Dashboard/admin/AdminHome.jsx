@@ -1,22 +1,58 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import axiosSecure from "../../../hooks/useAxiosSecure";
 import { FaUsers, FaCoins, FaWallet, FaCheckCircle } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminHome = () => {
   const [stats, setStats] = useState({});
   const [withdraws, setWithdraws] = useState([]);
 
   useEffect(() => {
+    // fetch stats
     axiosSecure.get("/admin-stats").then((res) => setStats(res.data));
-       
+
+    // fetch withdraw requests
     axiosSecure.get("/withdraw-requests").then((res) => setWithdraws(res.data));
   }, []);
 
-  const handleApprove = (id, email, coin) => {
-    axiosSecure.patch(`/withdraw-approve/${id}`, { email, coin }).then(() => {
-      setWithdraws(withdraws.filter((w) => w._id !== id));
-    });
-  };
+  
+  // const handleApprove = async (id, email, coin) => {
+  //   try {
+  //     await axiosSecure.patch(`/withdraw-approve/${id}`, { email, coin });
+
+  //     // update withdraws state, change status to approved
+  //     setWithdraws((prev) =>
+  //       prev.map((w) =>
+  //         w._id === id ? { ...w, status: "approved" } : w
+  //       )
+  //     );
+
+  //     toast.success("Withdrawal approved successfully!");
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Approval failed");
+  //   }
+  // };
+
+const handleApprove = async (id) => {
+  try {
+    await axiosSecure.patch(`/withdraw-approve/${id}`);
+
+    setWithdraws((prev) =>
+      prev.map((w) =>
+        w._id === id ? { ...w, status: "approved" } : w
+      )
+    );
+
+    toast.success("Withdrawal approved successfully!");
+  } catch (err) {
+    console.error(err.response?.data);
+    toast.error("Approval failed");
+  }
+};
 
   const statCards = [
     { title: "Total Workers", value: stats.workers || 0, icon: <FaUsers />, color: "bg-blue-500" },
@@ -27,6 +63,7 @@ const AdminHome = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-3xl font-bold text-gray-800 mb-8 mt-10">Admin Dashboard</h2>
 
       {/* Stats Cards Section */}
@@ -65,12 +102,16 @@ const AdminHome = () => {
                     <td className="px-6 py-4 font-medium text-gray-700">{w.worker_name}</td>
                     <td className="px-6 py-4 text-green-600 font-bold">${w.withdrawal_amount}</td>
                     <td className="px-6 py-4 text-center">
-                      <button
-                        onClick={() => handleApprove(w._id, w.worker_email, w.withdrawal_coin)}
-                        className="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-all shadow-md active:scale-95"
-                      >
-                        <FaCheckCircle className="mr-2" /> Approve Payment
-                      </button>
+                      {w.status === "pending" ? (
+                        <button
+                          onClick={() => handleApprove(w._id, w.worker_email, w.withdrawal_coin)}
+                          className="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-all shadow-md active:scale-95"
+                        >
+                          <FaCheckCircle className="mr-2" /> Approve Payment
+                        </button>
+                      ) : (
+                        <span className="text-blue-600 font-semibold">{w.status}</span>
+                      )}
                     </td>
                   </tr>
                 ))

@@ -60,6 +60,10 @@ const AddTask = () => {
       toast.success("Task added successfully!");
       await refetchUser();
 
+  setTimeout(() => {
+    navigate("/dashboard/my-tasks");
+  }, 1000); 
+
       navigate("/dashboard/my-tasks");
 
     } catch (err) {
@@ -78,7 +82,7 @@ const AddTask = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow rounded">
+    <div className="max-w-2xl mx-auto mt-4 p-6 bg-white shadow rounded">
       <Toaster position="top-right" />
 
       <h2 className="text-2xl font-bold mb-6 mt-8">Add New Task</h2>

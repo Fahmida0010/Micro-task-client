@@ -7,8 +7,9 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { auth } from "../firebase/firebase.config";
 import axios from "../hooks/useAxiosSecure";
+import { auth } from "../firebase/firebase.config";
+import axiosSecure from "../hooks/useAxiosSecure";
 
 export const AuthContext = createContext(); 
 const provider = new GoogleAuthProvider();
@@ -16,6 +17,19 @@ const provider = new GoogleAuthProvider();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+   const [coin, setCoin] = useState(0); 
+
+     useEffect(() => {
+    if (!user?.email) return;
+
+    const fetchCoin = async () => {
+      const res = await axios.get(`/user/info?email=${user.email}`);
+      setCoin(res.data.coin);
+    };
+
+    fetchCoin();
+  }, [user]);
+    const value = { user, setUser, coin, setCoin };
 
   const register = (email, password) =>
     createUserWithEmailAndPassword(auth, email, password);
@@ -27,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => signOut(auth);
 
-  // ADD THIS FUNCTION (only new part)
+  
   const refetchUser = async () => {
     try {
       if (!user?.email) return;
@@ -47,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       if (currentUser) {
-        const res = await axios.post("/jwt", {
+        const res = await axiosSecure.post("/jwt", {
           email: currentUser.email,
         });
         localStorage.setItem("access-token", res.data.token);
@@ -70,7 +84,9 @@ export const AuthProvider = ({ children }) => {
         login, 
         googleLogin, 
         logout,
-        refetchUser  
+        refetchUser,
+        coin,
+        setCoin
       }}
     >
       {children}

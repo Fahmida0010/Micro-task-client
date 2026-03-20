@@ -81,31 +81,53 @@ const Register = () => {
       setLoading(false);
     }
   };
+const handleGoogleLogin = async () => {
+  try {
+    const res = await googleLogin();
 
-   const handleGoogleLogin = async () => {
-  
-      try {
-  
-        const res = await googleLogin();
-  
-        const tokenRes = await axios.post("/jwt", { email: res.user.email });
-  
-        const token = tokenRes.data.token;
-        localStorage.setItem("access-token", token);
-  
-        const userRes = await axios.get(`/users/${res.user.email}`, {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        });
-  
-        redirectByRole(userRes.data.role);
-  
-      } catch {
-        setError("Google login failed");
-      }
-    };
+    const email = res.user.email;
 
+    // 🔑 JWT
+    const tokenRes = await axios.post("/jwt", { email });
+    const token = tokenRes.data.token;
+    localStorage.setItem("access-token", token);
+
+    // 🔍 check user exists কিনা
+    let userRes;
+    try {
+      userRes = await axios.get(`/users/${email}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (err) {
+      userRes = null;
+    }
+
+    
+    if (!userRes || !userRes.data) {
+      const newUser = {
+        name: res.user.displayName,
+        email: res.user.email,
+        photo: res.user.photoURL,
+        role: "buyer", 
+        coin: 50,      
+      };
+
+      await axios.post("/users", newUser);
+
+      // redirect buyer
+      redirectByRole("buyer");
+    } else {
+      // existing user → redirect based on role
+      redirectByRole(userRes.data.role);
+    }
+
+  } catch (err) {
+    console.error(err);
+    setError("Google login failed");
+  }
+};
   return (
     <div className="min-h-screen 
     flex items-center justify-center bg-gradient-to-br 

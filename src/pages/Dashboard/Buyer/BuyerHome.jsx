@@ -18,7 +18,7 @@ const BuyerHome = () => {
   const fetchStats = async (email) => {
     try {
       const res = await axiosSecure.get(`/buyer/stats/${email}`);
-      console.log("Stats fresh data:", res.data); // debug
+      console.log("Stats fresh data:", res.data); 
       setStats(res.data);
     } catch (err) {
       console.error("Stats fetch error:", err);
@@ -45,42 +45,10 @@ const BuyerHome = () => {
 
     const email = user.email;
     fetchStats(email);
-    fetchSubmissions(email);
+    fetchSubmissions(email); 
   }, [loading, user?.email]);
 
-  // const handleAction = async (id, action) => {
-    
-  //   const actionText = action === "approve" ? "Approve" : "Reject";
-  //   const confirmText = action === "approve" ? "হ্যাঁ, Approve করুন!" : "হ্যাঁ, Reject করুন!";
-
-  //   const result = await Swal.fire({
-  //     title: `Are you sure to ${actionText} this submission?`,
-  //     text: "এই কাজ পরে পরিবর্তন করা যাবে না!",
-  //     icon: "question",
-  //     showCancelButton: true,
-  //     confirmButtonColor: action === "approve" ? "#10B981" : "#EF4444",
-  //     cancelButtonColor: "#6B7280",
-  //     confirmButtonText: confirmText,
-  //     cancelButtonText: "না, বাতিল",
-  //   });
-
-  //   if (!result.isConfirmed) return;
-
-  //   try {
-  //     const endpoint = action === "approve" ? `/submissions/approve/${id}` : `/submissions/reject/${id}`;
-  //     const res = await axiosSecure.patch(endpoint);
-  //     console.log(`${actionText} response:`, res.data); // debug
-
-  //     toast.success(`Submission ${action === "approve" ? "Approved" : "Rejected"} Successfully!`);
-
-  //     // দুটোই refresh করা হচ্ছে
-  //     await Promise.all([fetchStats(user.email), fetchSubmissions(user.email)]);
-  //   } catch (err) {
-  //     console.error(`${actionText} error:`, err.response?.data || err);
-  //     toast.error(`Failed to ${actionText.toLowerCase()} submission`);
-  //   }
-  // };
-
+  
   const handleAction = async (id, action) => {
   const actionText = action === "approve" ? "Approve" : "Reject";
 

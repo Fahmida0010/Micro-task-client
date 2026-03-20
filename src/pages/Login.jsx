@@ -18,15 +18,15 @@ const Login = () => {
     const password = e.target.password.value;
 
     try {
-      // ১. ফায়ারবেস লগইন
+      
       await login(email, password);
 
-      // ২. সার্ভার থেকে JWT টোকেন নেওয়া
+      
       const { data } = await axiosSecure.post("/jwt", { email });
       
       if (data.token) {
         localStorage.setItem("access-token", data.token);
-        // ৩. সরাসরি ড্যাশবোর্ডে পাঠানো (বাকি কাজ DashboardRedirect করবে)
+    
         navigate("/dashboard");
       }
     } catch (err) {
@@ -34,25 +34,51 @@ const Login = () => {
       setError("Invalid email or password");
     }
   };
+const handleGoogleLogin = async () => {
+  try {
+    const res = await googleLogin();
+    const email = res.user.email;
 
-  const handleGoogleLogin = async () => {
-    try {
-      const res = await googleLogin();
-      const email = res.user.email;
 
-      // JWT টোকেন জেনারেট এবং সেভ
-      const { data } = await axiosSecure.post("/jwt", { email });
+    const { data } = await axiosSecure.post("/jwt", { email });
+    const token = data.token;
+
+    if (token) {
+      localStorage.setItem("access-token", token);
+
       
-      if (data.token) {
-        localStorage.setItem("access-token", data.token);
-        navigate("/dashboard");
+      let userRes;
+      try {
+        userRes = await axiosSecure.get(`/users/${email}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+      } catch {
+        userRes = null;
       }
-    } catch (err) {
-      console.error(err);
-      setError("Google login failed");
-    }
-  };
 
+    
+      if (!userRes || !userRes.data) {
+        const newUser = {
+          name: res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+          role: "buyer",
+          coin: 50,     
+        };
+
+        await axiosSecure.post("/users", newUser);
+      }
+
+      navigate("/dashboard");
+    }
+
+  } catch (err) {
+    console.error(err);
+    setError("Google login failed");
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100">
       <div className="w-full max-w-md bg-white p-8 mt-12 rounded-xl shadow-xl">
