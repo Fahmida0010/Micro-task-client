@@ -3,7 +3,7 @@
 
 ## 🔗 Live Website
 
-👉 https://cerulean-cactus-7043d9.netlify.app
+👉 https://golden-crostata-a7c55d.netlify.app
 
 ## 👑 Admin Credentials
 
