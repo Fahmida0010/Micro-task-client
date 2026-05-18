@@ -123,6 +123,6 @@ Inspired by platforms like Picoworkers and Clickworker, this system ensures smoo
 
 This project demonstrates a complete full-stack application with authentication, role-based access, payment integration, and real-world business logic.
 
----
 
-✨ Thank you for visiting this project!
+
+✨ Thank you for visiting this project!💙
