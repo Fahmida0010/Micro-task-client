@@ -18,7 +18,7 @@ const BuyerHome = () => {
   const fetchStats = async (email) => {
     try {
       const res = await axiosSecure.get(`/buyer/stats/${email}`);
-      console.log("Stats fresh data:", res.data); 
+      console.log("Statnps fresh data:", res.data); 
       setStats(res.data);
     } catch (err) {
       console.error("Stats fetch error:", err);

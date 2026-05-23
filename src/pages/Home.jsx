@@ -1,5 +1,5 @@
 import BestWorkers from "../components/Home/BestWorkers";
-import HeroSlider from "../components/home/HeroSlider";
+import HeroSlider from "../components/Home/HeroSlider";
 import HowItWorks from "../components/Home/HowItWorks";
 import OurJourney from "../components/Home/OurJourney";
 import Testimonials from "../components/Home/Testimonials";
