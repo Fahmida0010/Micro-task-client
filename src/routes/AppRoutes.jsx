@@ -26,10 +26,12 @@ import ManageUsers from "../pages/Dashboard/admin/ManageUsers";
 import ManageTasks from "../pages/Dashboard/admin/ManageTasks";
 import AdminRoute from "./AdminRoutes";
 import NotFound from "../pages/NotFound/NotFound";
-import PaymentSuccess from "../pages/payment/PaymentSuccess";
-import PaymentFailed from "../pages/payment/PaymentFailed";
+// import PaymentSuccess from "../pages/payment/payment-success";
+// import PaymentFailed from "../pages/payment/payment-failed";
 import TaskDetails from "../pages/Dashboard/worker/TaskDetails";
 import UpdateTask from "../pages/Dashboard/Buyer/UpdateTask";
+import PaymentSuccess from "../pages/payment/payment-success";
+import PaymentFailed from "../pages/payment/payment-failed";
 
 // --- DashboardRedirect Component ---
 const DashboardRedirect = () => {
@@ -148,18 +150,18 @@ export const router = createBrowserRouter([
           <ManageTasks/>
         </AdminRoute>
     },    
+     {
+  path: "/dashboard/payment-success",
+  element: <PaymentSuccess/>
+},
+  {
+  path: "/dashboard/payment-failed",
+  element: <PaymentFailed/>
+}
     ],
   },
      {
   path: "*",
   element: <NotFound/>
-},
-  {
-  path: "payment-success",
-  element: <PaymentSuccess/>
-},
-  {
-  path: "payment-failed",
-  element: <PaymentFailed/>
 }
 ]);

@@ -27,6 +27,8 @@ const PurchaseCoin = () => {
 
       window.location.href = res.data.url; // redirect to Stripe
     } catch (err) {
+       console.log(err.response?.data);
+    console.log(err.message);
       console.error(err);
       toast.error("Payment initialization failed");
     }
