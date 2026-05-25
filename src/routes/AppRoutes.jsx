@@ -151,11 +151,11 @@ export const router = createBrowserRouter([
         </AdminRoute>
     },    
      {
-  path: "/dashboard/payment-success",
+  path: "payment-success",
   element: <PaymentSuccess/>
 },
   {
-  path: "/dashboard/payment-failed",
+  path: "payment-failed",
   element: <PaymentFailed/>
 }
     ],
