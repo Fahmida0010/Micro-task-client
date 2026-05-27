@@ -110,7 +110,7 @@ Inspired by platforms like Picoworkers and Clickworker, this system ensures smoo
 
 ---
 
-## 🎯 Future Improvements (Optional)
+###🎯 Future Improvements (Optional)
 
 * 📧 Email notification system (SendGrid / AWS SES)
 * 🔍 Advanced filtering & search system
