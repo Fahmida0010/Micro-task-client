@@ -8,7 +8,7 @@
 ## 👑 Admin Credentials
 
 * **Email:** [tahmid@gmail.com]
-* **Password:** Tahmid26@#
+* *Password:** Tahmid26@#
 
 ---
 
