@@ -51,7 +51,7 @@ Inspired by platforms like Picoworkers and Clickworker, this system ensures smoo
 * Withdraw earnings
 * Get notifications for approvals/rejections
 
-### 🧑‍💼 Buyer
+#### 🧑‍💼 Buyer
 
 * Create and manage tasks
 * Review worker submissions
