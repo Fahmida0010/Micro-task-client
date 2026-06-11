@@ -5,6 +5,14 @@
 
 👉 https://micro-task-client.onrender.com
 
+---
+
+## 📂 GitHub Repositories
+
+* 🔗 Client Side:https://github.com/Fahmida0010/Micro-task-client.git
+* 🔗 Server Side:  https://github.com/Fahmida0010/Micro-task-server.git
+
+---
 ## 👑 Admin Credentials
 
 * **Email:** [tahmid@gmail.com]
@@ -101,14 +109,6 @@ Inspired by platforms like Picoworkers and Clickworker, this system ensures smoo
 
   * Withdrawal approval 💸
 
----
-
-## 📂 GitHub Repositories
-
-* 🔗 Client Side:https://github.com/Fahmida0010/Micro-task-client.git
-* 🔗 Server Side:  https://github.com/Fahmida0010/Micro-task-server.git
-
----
 
 ###🎯 Future Improvements (Optional)
 
