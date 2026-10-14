@@ -179,11 +179,14 @@ npm install
 Create a `.env.local` file in the project root and add the required environment variables.
 
 ```env
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
-VITE_IMGBB_API_KEY=your_imgbb_api_key
-VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+VITE_API_URL=your_backend_api_url
+VITE_IMGBB_KEY=your_imgbb_api_key
+VITE_apiKey=your_firebase_api_key
+VITE_authDomain=your_firebase_auth_domain
+VITE_projectId=your_firebase_project_id
+VITE_storageBucket=your_firebase_storage_bucket
+VITE_messagingSenderId=your_firebase_messaging_sender_id
+VITE_appId=your_firebase_app_id
 ```
 
 Replace the placeholder values with your actual credentials. Use only the variables required by your project and check your Firebase configuration and API usage in the source code.
