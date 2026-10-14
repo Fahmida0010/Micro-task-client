@@ -119,6 +119,113 @@ Inspired by platforms like Picoworkers and Clickworker, this system ensures smoo
 
 ---
 
+## 📦 Dependencies Used
+
+### Production Dependencies
+
+- **React & React DOM** – Building interactive user interfaces.
+- **React Router & React Router DOM** – Client-side routing and navigation.
+- **Tailwind CSS & @tailwindcss/vite** – Responsive styling and UI design.
+- **TanStack React Query** – Server-state management and data fetching.
+- **Axios** – Making HTTP requests to the backend API.
+- **Firebase** – Authentication and user management.
+- **Stripe** – Payment integration for purchasing coins.
+- **Framer Motion** – Smooth animations and transitions.
+- **Lucide React & React Icons** – Icons for the user interface.
+- **React Hot Toast & React Toastify** – Toast notifications and feedback messages.
+- **SweetAlert2** – Interactive alerts and confirmation dialogs.
+- **Swiper** – Responsive sliders and carousels.
+
+### Development Dependencies
+
+- **Vite** – Fast development server and build tool.
+- **@vitejs/plugin-react** – React support for Vite.
+- **ESLint** – Code linting and quality checks.
+- **@eslint/js** – JavaScript linting configurations.
+- **eslint-plugin-react-hooks** – Linting rules for React Hooks.
+- **eslint-plugin-react-refresh** – React Fast Refresh linting support.
+- **@types/react & @types/react-dom** – TypeScript type definitions for React.
+- **globals** – Global variable definitions for ESLint.
+
+### 🛠️ Package Manager & Build Tools
+
+- **npm** – Dependency and package management.
+- **Vite** – Development, production builds, and preview server.
+
+  ## ⚙️ Installation & Run Locally
+
+Follow these steps to run the MicroTask project on your local machine.
+
+### 1. Clone the Client Repository
+
+```bash
+git clone https://github.com/Fahmida0010/Micro-task-client.git
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
+cd Micro-task-client
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env.local` file in the project root and add the required environment variables.
+
+```env
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_IMGBB_API_KEY=your_imgbb_api_key
+VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+```
+
+Replace the placeholder values with your actual credentials. Use only the variables required by your project and check your Firebase configuration and API usage in the source code.
+
+### 5. Start the Development Server
+
+```bash
+npm run dev
+```
+
+Open the local URL displayed in your terminal, usually:
+
+```text
+http://localhost:5173
+```
+
+### 6. Build for Production (Optional)
+
+```bash
+npm run build
+```
+
+### 7. Preview the Production Build (Optional)
+
+```bash
+npm run preview
+```
+
+### 8. Run the Backend
+
+The client also requires the backend server to be running for API-dependent features.
+
+```bash
+git clone https://github.com/Fahmida0010/Micro-task-server.git
+cd Micro-task-server
+npm install
+```
+
+Configure the backend environment variables according to its `.env.example` or project configuration, then run the appropriate development command defined in its `package.json`.
+
+**Note:** Ensure that the backend API URL and CORS configuration allow requests from your local frontend URL.
+
 ## ❤️ Final Note
 
 This project demonstrates a complete full-stack application with authentication, role-based access, payment integration, and real-world business logic.
