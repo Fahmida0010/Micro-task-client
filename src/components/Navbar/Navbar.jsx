@@ -6,6 +6,7 @@ import Logo from "../Logo/Logo";
 import { useEffect, useState, useRef } from "react";
 import axios from "../../hooks/useAxiosSecure";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -35,6 +36,17 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+  // Fetch user from MongoDB (same query key used in dashboard & profile) so it updates instantly
+  const { data: dbUser,refetch } = useQuery({
+    queryKey: ["dbUser", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
+
   //  fetch notifications + user info
   useEffect(() => {
     if (user?.email) {
@@ -51,8 +63,8 @@ const Navbar = () => {
   
 
   return (
-    <nav className="bg-purple-600 text-white shadow-md fixed w-full z-50">
-      <div className="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
+    <nav className="bg-white text-gray-800 shadow-md fixed w-full z-50">
+      <div className="w-full px-6 flex justify-between items-center h-16">
         
         {/* Logo */}
         <Logo />
@@ -116,21 +128,20 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Profile Dropdown */}
+           {/* Profile Dropdown */}
               <div ref={dropdownRef} className="relative">
                 <img
-                  src={user.photoURL}
-                  className="w-8 h-8 rounded-full cursor-pointer"
+                  src={dbUser?.photo || user?.photoURL} 
+                  className="w-8 h-8 rounded-full object-cover cursor-pointer"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 />
                 {dropdownOpen && (
-                  <div className="absolute bg-pink-300 right-0 mt-2 w-48 text-black rounded shadow-lg p-3 z-50">
-                    <p className="font-semibold">{user.displayName}</p>
-                    <p className="text-sm text-green-900">{user.email}</p>
+                  <div className="absolute bg-white right-0 mt-2 w-48 text-black rounded shadow-lg p-3 z-50 border">
+                    <p className="font-semibold">{dbUser?.name || user?.displayName}</p>
+                    <p className="text-sm text-gray-500">{user.email}</p>
                   </div>
                 )}
               </div>
-
               <span className="ml-2">👤 {role}</span>
 
               <button

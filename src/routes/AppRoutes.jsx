@@ -26,14 +26,15 @@ import ManageUsers from "../pages/Dashboard/admin/ManageUsers";
 import ManageTasks from "../pages/Dashboard/admin/ManageTasks";
 import AdminRoute from "./AdminRoutes";
 import NotFound from "../pages/NotFound/NotFound";
-// import PaymentSuccess from "../pages/payment/payment-success";
-// import PaymentFailed from "../pages/payment/payment-failed";
 import TaskDetails from "../pages/Dashboard/worker/TaskDetails";
 import UpdateTask from "../pages/Dashboard/Buyer/UpdateTask";
 import PaymentSuccess from "../pages/payment/payment-success";
 import PaymentFailed from "../pages/payment/payment-failed";
+import Profile from "../pages/Dashboard/Profile/profile";
+import Settings from "../pages/Dashboard/Settings/Settings";
 
-// --- DashboardRedirect Component ---
+
+
 const DashboardRedirect = () => {
   const { user: authUser, loading: authLoading } = useAuth();
 
@@ -41,7 +42,7 @@ const DashboardRedirect = () => {
     queryKey: ["userRole", authUser?.email],
     enabled: !authLoading && !!authUser?.email, 
     queryFn: async () => {
-      // এখানে axios এর বদলে axiosSecure ব্যবহার করা হয়েছে
+      
       const res = await axiosSecure.get(`/users/${authUser.email}`);
       return res.data;
     },
@@ -53,7 +54,7 @@ const DashboardRedirect = () => {
 
   if (!authUser) return <Navigate to="/login" replace />;
 
-  const role = dbUser?.role?.toLowerCase(); // Case-sensitivity এড়াতে toLowerCase()
+  const role = dbUser?.role?.toLowerCase(); 
 
   if (role === "worker") return <Navigate to="/dashboard/worker-home" replace />;
   if (role === "buyer") return <Navigate to="/dashboard/buyer-home" replace />;
@@ -81,6 +82,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <DashboardRedirect />,
       },
+      
       // Buyer Routes
       {
         path: "buyer-home",
@@ -106,6 +108,14 @@ export const router = createBrowserRouter([
         path: "payment-history",
         element: <BuyerRoute><PaymentHistory /></BuyerRoute>,
       },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+       {
+        path: "settings",
+        element: <Settings />,
+      },
       // Worker Routes
       {
         path: "worker-home",
@@ -126,6 +136,14 @@ export const router = createBrowserRouter([
       {
         path: "withdrawals",
         element: <WorkerRoute><Withdrawals /></WorkerRoute>,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+       {
+        path: "settings",
+        element: <Settings />,
       },
       //admin route
     {
@@ -150,6 +168,14 @@ export const router = createBrowserRouter([
           <ManageTasks/>
         </AdminRoute>
     },    
+    {
+        path: "profile",
+        element: <Profile />,
+      },
+       {
+        path: "settings",
+        element: <Settings />,
+      },
      {
   path: "payment-success",
   element: <PaymentSuccess/>

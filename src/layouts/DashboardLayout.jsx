@@ -1,7 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
-import { FaHome, FaTasks, FaPlusCircle, FaCoins, FaHistory, FaUsers, FaUserShield } from "react-icons/fa";
+import { 
+  FaHome, 
+  FaTasks, 
+  FaPlusCircle, 
+  FaCoins, 
+  FaHistory, 
+  FaUsers, 
+  FaUserShield, 
+  FaUserEdit, 
+  FaCog 
+} from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
@@ -9,9 +20,9 @@ import { useAuth } from "../context/AuthProvider";
 import axiosSecure from "../hooks/useAxiosSecure";
 import Loading from "../components/Loader/Loading";
 
-
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,7 +37,12 @@ const DashboardLayout = () => {
     },
   });
 
-  // 🚦 Redirect logic inside layout
+  // Close mobile drawer automatically on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Redirect logic inside layout
   useEffect(() => {
     if (loading || isLoading) return;
     if (!user) {
@@ -42,7 +58,7 @@ const DashboardLayout = () => {
   }, [user, loading, isLoading, dbUser, location.pathname, navigate]);
 
   if (loading || isLoading) {
-    return <Loading/>
+    return <Loading />;
   }
   if (!user) return null;
 
@@ -76,44 +92,133 @@ const DashboardLayout = () => {
   if (role === "admin") menuItems = adminMenu;
 
   return (
-    <div className="flex flex-col min-h-screen">
-
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Top Navbar */}
       <Navbar />
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 pt-16 relative">
+        
+        {/* Mobile & Tablet Toggle Bar (Visible on small screens) */}
+        <div className="lg:hidden w-full bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center fixed top-16 left-0 right-0 z-30 shadow-sm">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-700 hover:bg-indigo-50 rounded-lg transition"
+            >
+              {mobileMenuOpen ? <HiX size={24} /> : <HiMenuAlt3 size={24} />}
+            </button>
+            <span className="font-semibold text-gray-800 text-sm sm:text-base capitalize">
+              Dashboard ({role})
+            </span>
+          </div>
+        </div>
 
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? "w-64" : "w-20"} bg-indigo-600 text-white transition-all p-4`}>
+        {/* Backdrop Overlay for Mobile Drawer */}
+        {mobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
 
-          <button 
-            onClick={() => setSidebarOpen(!sidebarOpen)} 
-            className="mb-6 p-2 hover:bg-indigo-700 rounded"
-          >
-            {sidebarOpen ? <HiX size={24} /> : <HiMenuAlt3 size={24} />}
-          </button>
-
-          <nav className="space-y-2">
-            {menuItems.map(item => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="flex items-center gap-3 p-3 rounded hover:bg-indigo-700 transition"
+        {/* Sidebar Container */}
+        <aside 
+          className={`
+            fixed lg:static top-16 lg:top-0 bottom-0 left-0 z-50 lg:z-10
+            bg-white border-r border-gray-200 transition-all duration-300 ease-in-out
+            flex flex-col justify-between p-4
+            ${mobileMenuOpen ? "translate-x-0 w-64 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
+            ${sidebarOpen ? "lg:w-64" : "lg:w-20"}
+          `}
+        >
+          <div>
+            {/* Desktop Sidebar Collapse Button */}
+            <div className="hidden lg:flex justify-between items-center mb-6 px-1">
+              {sidebarOpen && (
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+                  {role} Panel
+                </span>
+              )}
+              <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)} 
+                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                title={sidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
               >
-                <span className="text-lg">{item.icon}</span>
-                {sidebarOpen && <span>{item.label}</span>}
-              </Link>
-            ))}
-          </nav>
+                {sidebarOpen ? <HiX size={20} /> : <HiMenuAlt3 size={20} />}
+              </button>
+            </div>
 
+            {/* Navigation Menu */}
+            <nav className="space-y-1.5 mt-10 lg:mt-0">
+              {menuItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-3.5 p-3 rounded-xl font-medium transition text-sm sm:text-base ${
+                      isActive 
+                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" 
+                        : "hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+                    }`}
+                  >
+                    <span className="text-xl flex-shrink-0">{item.icon}</span>
+                    <span className={`${!sidebarOpen && "lg:hidden"} truncate`}>
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
+
+              <hr className="my-3 border-gray-100" />
+
+              {/* Profile Link */}
+              <Link
+                to="/dashboard/profile"
+                className={`flex items-center gap-3.5 p-3 rounded-xl font-medium transition text-sm sm:text-base ${
+                  location.pathname === "/dashboard/profile"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                    : "hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+                }`}
+              >
+                <span className="text-xl flex-shrink-0"><FaUserEdit /></span>
+                <span className={`${!sidebarOpen && "lg:hidden"} truncate`}>Profile</span>
+              </Link>
+
+              {/* Settings Link */}
+              <Link
+                to="/dashboard/settings"
+                className={`flex items-center gap-3.5 p-3 rounded-xl font-medium transition text-sm sm:text-base ${
+                  location.pathname === "/dashboard/settings"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                    : "hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+                }`}
+              >
+                <span className="text-xl flex-shrink-0"><FaCog /></span>
+                <span className={`${!sidebarOpen && "lg:hidden"} truncate`}>Settings</span>
+              </Link>
+            </nav>
+          </div>
+
+          {/* Go Back Home Link at Bottom */}
+          <div className="pt-4 border-t border-gray-100">
+            <Link
+              to="/"
+              className="flex items-center gap-3.5 p-3 rounded-xl font-medium text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition text-sm sm:text-base"
+            >
+              <span className="text-xl flex-shrink-0"><FaArrowLeftLong /></span>
+              <span className={`${!sidebarOpen && "lg:hidden"} truncate`}>Go Back Home</span>
+            </Link>
+          </div>
         </aside>
 
-        {/* Content */}
-        <main className="flex-1 p-6 bg-gray-50">
+        {/* Main Content Body */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 mt-12 lg:mt-0 w-full overflow-x-hidden">
           <Outlet />
         </main>
-
       </div>
 
+      {/* Footer */}
       <Footer />
     </div>
   );

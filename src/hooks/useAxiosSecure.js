@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const axiosSecure = axios.create({
-  baseURL: "https://micro-task-server-three.vercel.app",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+
 });
 
 axiosSecure.interceptors.request.use(
