@@ -3,13 +3,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // LocalStorage ba system preference theke initial theme determine kora
+  // Browser-er localStorage theke theme nibe, na thakle default 'light' thakbe
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) return savedTheme;
-    
-    // User-er browser/system dark mode support kore kina check korbe
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return localStorage.getItem('theme') || 'light';
   });
 
   useEffect(() => {
@@ -19,12 +15,12 @@ export const ThemeProvider = ({ children }) => {
     } else {
       root.classList.remove('dark');
     }
-    // LocalStorage-e theme save rakha jate refresh korleo state thake
+    // LocalStorage-e theme save rakha jate page refresh korleo mode change na hoy
     localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (
@@ -34,10 +30,4 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
+export const useTheme = () => useContext(ThemeContext);

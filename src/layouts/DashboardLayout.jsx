@@ -92,22 +92,22 @@ const DashboardLayout = () => {
   if (role === "admin") menuItems = adminMenu;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
       {/* Top Navbar */}
       <Navbar />
 
       <div className="flex flex-1 pt-16 relative">
         
         {/* Mobile & Tablet Toggle Bar (Visible on small screens) */}
-        <div className="lg:hidden w-full bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center fixed top-16 left-0 right-0 z-30 shadow-sm">
+        <div className="lg:hidden w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex justify-between items-center fixed top-16 left-0 right-0 z-30 shadow-sm">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-700 hover:bg-indigo-50 rounded-lg transition"
+              className="p-2 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-800 rounded-lg transition"
             >
               {mobileMenuOpen ? <HiX size={24} /> : <HiMenuAlt3 size={24} />}
             </button>
-            <span className="font-semibold text-gray-800 text-sm sm:text-base capitalize">
+            <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base capitalize">
               Dashboard ({role})
             </span>
           </div>
@@ -125,8 +125,8 @@ const DashboardLayout = () => {
         <aside 
           className={`
             fixed lg:static top-16 lg:top-0 bottom-0 left-0 z-50 lg:z-10
-            bg-white border-r border-gray-200 transition-all duration-300 ease-in-out
-            flex flex-col justify-between p-4
+            bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ease-in-out
+            flex flex-col p-4
             ${mobileMenuOpen ? "translate-x-0 w-64 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
             ${sidebarOpen ? "lg:w-64" : "lg:w-20"}
           `}
@@ -135,13 +135,13 @@ const DashboardLayout = () => {
             {/* Desktop Sidebar Collapse Button */}
             <div className="hidden lg:flex justify-between items-center mb-6 px-1">
               {sidebarOpen && (
-                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                   {role} Panel
                 </span>
               )}
               <button 
                 onClick={() => setSidebarOpen(!sidebarOpen)} 
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                 title={sidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
               >
                 {sidebarOpen ? <HiX size={20} /> : <HiMenuAlt3 size={20} />}
@@ -158,8 +158,8 @@ const DashboardLayout = () => {
                     to={item.path}
                     className={`flex items-center gap-3.5 p-3 rounded-xl font-medium transition text-sm sm:text-base ${
                       isActive 
-                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" 
-                        : "hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none" 
+                        : "hover:bg-indigo-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
                     }`}
                   >
                     <span className="text-xl flex-shrink-0">{item.icon}</span>
@@ -170,15 +170,15 @@ const DashboardLayout = () => {
                 );
               })}
 
-              <hr className="my-3 border-gray-100" />
+              <hr className="my-3 border-gray-100 dark:border-gray-800" />
 
               {/* Profile Link */}
               <Link
                 to="/dashboard/profile"
                 className={`flex items-center gap-3.5 p-3 rounded-xl font-medium transition text-sm sm:text-base ${
                   location.pathname === "/dashboard/profile"
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                    : "hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none"
+                    : "hover:bg-indigo-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
                 }`}
               >
                 <span className="text-xl flex-shrink-0"><FaUserEdit /></span>
@@ -190,8 +190,8 @@ const DashboardLayout = () => {
                 to="/dashboard/settings"
                 className={`flex items-center gap-3.5 p-3 rounded-xl font-medium transition text-sm sm:text-base ${
                   location.pathname === "/dashboard/settings"
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                    : "hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none"
+                    : "hover:bg-indigo-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
                 }`}
               >
                 <span className="text-xl flex-shrink-0"><FaCog /></span>
@@ -201,10 +201,10 @@ const DashboardLayout = () => {
           </div>
 
           {/* Go Back Home Link at Bottom */}
-          <div className="pt-4 border-t border-gray-100">
+          <div className="border-t border-gray-100 dark:border-gray-800 pt-3">
             <Link
               to="/"
-              className="flex items-center gap-3.5 p-3 rounded-xl font-medium text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition text-sm sm:text-base"
+              className="flex items-center gap-3.5 p-3 rounded-xl font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition text-sm sm:text-base"
             >
               <span className="text-xl flex-shrink-0"><FaArrowLeftLong /></span>
               <span className={`${!sidebarOpen && "lg:hidden"} truncate`}>Go Back Home</span>

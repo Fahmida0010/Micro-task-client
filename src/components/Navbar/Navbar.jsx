@@ -7,9 +7,11 @@ import { useEffect, useState, useRef } from "react";
 import axios from "../../hooks/useAxiosSecure";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { useQuery } from "@tanstack/react-query";
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [coin, setCoin] = useState(0);
   const [role, setRole] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -38,11 +40,11 @@ const Navbar = () => {
 
 
   // Fetch user from MongoDB (same query key used in dashboard & profile) so it updates instantly
-  const { data: dbUser,refetch } = useQuery({
+  const { data: dbUser, refetch } = useQuery({
     queryKey: ["dbUser", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user.email}`);
+      const res = await axios.get(`/users/${user.email}`);
       return res.data;
     },
   });
@@ -63,7 +65,7 @@ const Navbar = () => {
   
 
   return (
-    <nav className="bg-white text-gray-800 shadow-md fixed w-full z-50">
+    <nav className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md fixed w-full z-50">
       <div className="w-full px-6 flex justify-between items-center h-16">
         
         {/* Logo */}
@@ -71,6 +73,14 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
+          {/* Dark / Light Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+          </button>
+
           {!user ? (
             <>
               <Link to="/login" className="hover:text-indigo-300">Login</Link>
@@ -110,7 +120,7 @@ const Navbar = () => {
                 {openNotif && (
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className="absolute right-0 mt-2 w-80 bg-white text-black rounded shadow-lg p-3 z-50 max-h-80 overflow-y-auto"
+                    className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 text-black dark:text-white rounded shadow-lg p-3 z-50 max-h-80 overflow-y-auto"
                   >
                     {notifications.length > 0 ? (
                       notifications.map((n, i) => (
@@ -136,16 +146,16 @@ const Navbar = () => {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 />
                 {dropdownOpen && (
-                  <div className="absolute bg-white right-0 mt-2 w-48 text-black rounded shadow-lg p-3 z-50 border">
+                  <div className="absolute bg-white dark:bg-gray-800 right-0 mt-2 w-48 text-black dark:text-white rounded shadow-lg p-3 z-50 border">
                     <p className="font-semibold">{dbUser?.name || user?.displayName}</p>
-                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
                   </div>
                 )}
               </div>
               <span className="ml-2">👤 {role}</span>
 
               <button
-                className="bg-red-500 rounded-lg px-3 py-1 hover:bg-red-600"
+                className="bg-red-500 text-white rounded-lg px-3 py-1 hover:bg-red-600"
                 onClick={logout}
               >
                 Logout
@@ -156,6 +166,13 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-3">
+          {/* Mobile Dark / Light Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 text-sm rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700"
+          >
+            {theme === "light" ? "🌙" : "☀️"}
+          </button>
 
           {/* 🔔 Mobile Notification */}
           {user && (
@@ -177,7 +194,7 @@ const Navbar = () => {
               {openNotif && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 mt-2 w-72 bg-white text-black rounded shadow-lg p-3 z-50"
+                  className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 text-black dark:text-white rounded shadow-lg p-3 z-50"
                 >
                   {notifications.length > 0 ? (
                     notifications.map((n, i) => (
@@ -204,7 +221,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-purple-600 px-4 pt-4 pb-6 flex flex-col gap-4">
+        <div className="md:hidden bg-purple-600 dark:bg-gray-800 text-white px-4 pt-4 pb-6 flex flex-col gap-4">
           {!user ? (
             <>
               <Link to="/login" className="hover:text-indigo-300">Login</Link>

@@ -1,3 +1,52 @@
 @import "tailwindcss";
 
-   
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  /* Light Mode Defaults */
+  :root {
+    --bg-main: #f9fafb;
+    --text-main: #1f2937;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+  }
+
+  /* Dark Mode Defaults */
+  .dark {
+    --bg-main: #0f172a;        /* deep dark slate */
+    --text-main: #f8fafc;      /* bright white/slate */
+    --card-bg: #1e293b;      /* card dark slate */
+    --border-color: #334155;   /* border dark */
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+/* Helper classes jate shob white/gray background ebong text automatic adjust hoy */
+.dark .bg-white,
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-gray-600 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
