@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthProvider"; 
+import { useAuth } from "../context/AuthProvider";
 import axiosSecure from "../hooks/useAxiosSecure";
 
 import BasicLayout from "../layouts/BasicLayout";
@@ -41,13 +41,15 @@ import PaymentSuccess from "../pages/payment/payment-success";
 import PaymentFailed from "../pages/payment/payment-failed";
 import Profile from "../pages/Dashboard/Profile/profile";
 import Settings from "../pages/Dashboard/Settings/Settings";
+import About from "../pages/About/About";
+import AllTasks from "../pages/AllTasks/AllTasks";
 
 const DashboardRedirect = () => {
   const { user: authUser, loading: authLoading } = useAuth();
 
   const { data: dbUser, isLoading: dbLoading } = useQuery({
     queryKey: ["userRole", authUser?.email],
-    enabled: !authLoading && !!authUser?.email, 
+    enabled: !authLoading && !!authUser?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${authUser.email}`);
       return res.data;
@@ -55,14 +57,19 @@ const DashboardRedirect = () => {
   });
 
   if (authLoading || dbLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
 
   if (!authUser) return <Navigate to="/login" replace />;
 
-  const role = dbUser?.role?.toLowerCase(); 
+  const role = dbUser?.role?.toLowerCase();
 
-  if (role === "worker") return <Navigate to="/dashboard/worker-home" replace />;
+  if (role === "worker")
+    return <Navigate to="/dashboard/worker-home" replace />;
   if (role === "buyer") return <Navigate to="/dashboard/buyer-home" replace />;
   if (role === "admin") return <Navigate to="/dashboard/admin-home" replace />;
 
@@ -78,6 +85,8 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      {path: "about",element: <About />},
+        {path: "tasks",element: <AllTasks/>},
     ],
   },
   {
@@ -88,7 +97,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <DashboardRedirect />,
       },
-      
+
       // Shared Common Routes (Accessible by all roles inside Dashboard)
       {
         path: "profile",
@@ -112,63 +121,119 @@ export const router = createBrowserRouter([
       // Buyer Routes
       {
         path: "buyer-home",
-        element: <BuyerRoute><BuyerHome /></BuyerRoute>,
+        element: (
+          <BuyerRoute>
+            <BuyerHome />
+          </BuyerRoute>
+        ),
       },
       {
         path: "my-tasks",
-        element: <BuyerRoute><MyTasks /></BuyerRoute>,
+        element: (
+          <BuyerRoute>
+            <MyTasks />
+          </BuyerRoute>
+        ),
       },
       {
         path: "updatetask/:id",
-        element: <BuyerRoute><UpdateTask /></BuyerRoute>,
+        element: (
+          <BuyerRoute>
+            <UpdateTask />
+          </BuyerRoute>
+        ),
       },
       {
         path: "add-task",
-        element: <BuyerRoute><AddTask /></BuyerRoute>,
+        element: (
+          <BuyerRoute>
+            <AddTask />
+          </BuyerRoute>
+        ),
       },
       {
         path: "purchase-coin",
-        element: <BuyerRoute><PurchaseCoin /></BuyerRoute>,
+        element: (
+          <BuyerRoute>
+            <PurchaseCoin />
+          </BuyerRoute>
+        ),
       },
       {
         path: "payment-history",
-        element: <BuyerRoute><PaymentHistory /></BuyerRoute>,
+        element: (
+          <BuyerRoute>
+            <PaymentHistory />
+          </BuyerRoute>
+        ),
       },
 
       // Worker Routes
       {
         path: "worker-home",
-        element: <WorkerRoute><WorkerHome /></WorkerRoute>,
+        element: (
+          <WorkerRoute>
+            <WorkerHome />
+          </WorkerRoute>
+        ),
       },
       {
         path: "task-list",
-        element: <WorkerRoute><TaskList /></WorkerRoute>,
+        element: (
+          <WorkerRoute>
+            <TaskList />
+          </WorkerRoute>
+        ),
       },
       {
         path: "task-details/:id",
-        element: <WorkerRoute><TaskDetails /></WorkerRoute>,
+        element: (
+          <WorkerRoute>
+            <TaskDetails />
+          </WorkerRoute>
+        ),
       },
       {
         path: "my-submissions",
-        element: <WorkerRoute><MySubmissions /></WorkerRoute>,
+        element: (
+          <WorkerRoute>
+            <MySubmissions />
+          </WorkerRoute>
+        ),
       },
       {
         path: "withdrawals",
-        element: <WorkerRoute><Withdrawals /></WorkerRoute>,
+        element: (
+          <WorkerRoute>
+            <Withdrawals />
+          </WorkerRoute>
+        ),
       },
 
       // Admin Routes
       {
         path: "admin-home",
-        element: <AdminRoute><AdminHome /></AdminRoute>,
+        element: (
+          <AdminRoute>
+            <AdminHome />
+          </AdminRoute>
+        ),
       },
       {
         path: "manage-users",
-        element: <AdminRoute><ManageUsers /></AdminRoute>,
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
       },
       {
         path: "manage-tasks",
-        element: <AdminRoute><ManageTasks /></AdminRoute>,
+        element: (
+          <AdminRoute>
+            <ManageTasks />
+          </AdminRoute>
+        ),
       },
     ],
   },

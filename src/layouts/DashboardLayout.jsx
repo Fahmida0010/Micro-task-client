@@ -99,7 +99,7 @@ const DashboardLayout = () => {
       <div className="flex flex-1 pt-16 relative">
         
         {/* Mobile & Tablet Toggle Bar (Visible on small screens) */}
-        <div className="lg:hidden w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex justify-between items-center fixed top-16 left-0 right-0 z-30 shadow-sm">
+        <div className="lg:hidden w-full  px-4 py-3 flex justify-between items-center fixed top-16 left-0 right-0 z-30 ">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -107,8 +107,8 @@ const DashboardLayout = () => {
             >
               {mobileMenuOpen ? <HiX size={24} /> : <HiMenuAlt3 size={24} />}
             </button>
-            <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base capitalize">
-              Dashboard ({role})
+            <span className="font-semibold  text-sm sm:text-base capitalize">
+              Dashboard 
             </span>
           </div>
         </div>
@@ -218,8 +218,7 @@ const DashboardLayout = () => {
         </main>
       </div>
 
-      {/* Footer */}
-      <Footer />
+     
     </div>
   );
 };
