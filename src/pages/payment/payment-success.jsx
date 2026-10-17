@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../../../context/AuthProvider"; 
 import { FaCheckCircle } from "react-icons/fa";
+import { useAuth } from "../../context/AuthProvider";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
