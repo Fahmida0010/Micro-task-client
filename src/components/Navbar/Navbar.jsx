@@ -97,23 +97,24 @@ const Navbar = () => {
             <Link to="/tasks" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition whitespace-nowrap">
               All Tasks
             </Link>
-          </div>
-        )}
-
-        {/* 3. Right Side Menu (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
-          
+               
           {/* Dashboard Link (Only visible if logged in AND NOT already in dashboard) */}
           {user && !isDashboard && (
             <Link to="/dashboard" className="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition mr-1">
               Dashboard
             </Link>
           )}
+          </div>
+        )}
+
+        {/* 3. Right Side Menu (Desktop) */}
+        <div className="hidden md:flex items-center gap-4">
+       
 
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer font-semibold text-sm flex items-center justify-center"
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer font-semibold text-sm flex items-center justify-center mr-1"
             title="Toggle Theme"
           >
             {theme === "light" ? "🌙" : "☀️"}
@@ -183,8 +184,8 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Profile Dropdown */}
-              <div ref={dropdownRef} className="relative flex items-center gap-2">
+              {/* Profile Dropdown (Desktop) */}
+              <div ref={dropdownRef} className="relative flex items-center">
                 <img
                   src={dbUser?.photo || user?.photoURL || "https://i.ibb.co/m9YyZ2G/user.png"} 
                   className="w-9 h-9 rounded-full object-cover cursor-pointer ring-2 ring-indigo-500/30"
@@ -193,26 +194,41 @@ const Navbar = () => {
                 />
                 
                 {dropdownOpen && (
-                  <div className="absolute bg-white dark:bg-gray-800 right-0 top-12 w-52 text-gray-800 dark:text-gray-200 rounded-xl shadow-xl p-4 z-50 border border-gray-100 dark:border-gray-700">
-                    <p className="font-bold text-sm truncate">{dbUser?.name || user?.displayName}</p>
-                    <p className="text-xs text-gray-400 truncate mb-2">{user.email}</p>
-                    <span className="inline-block bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">
-                      Role: {currentRole || "User"}
-                    </span>
+                  <div className="absolute bg-white dark:bg-gray-800 right-0 top-12 w-60 text-gray-800 dark:text-gray-200 rounded-2xl shadow-2xl p-4 z-50 border border-gray-100 dark:border-gray-700 flex flex-col gap-3">
+                    <div className="border-b dark:border-gray-700 pb-3">
+                      <p className="font-bold text-sm truncate">{dbUser?.name || user?.displayName}</p>
+                      <p className="text-xs text-gray-400 truncate mt-0.5">{user.email}</p>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Role:</span>
+                        <span className="bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-md">
+                          👤 {currentRole || "User"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Profile Page Link */}
+                    <Link
+                      to="/dashboard/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      className="w-full bg-gray-200 hover:bg-indigo-100 dark:bg-gray-700/60 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl py-2 px-3 text-xs font-semibold transition flex items-center justify-between"
+                    >
+                      <span>View Profile</span>
+                      <span className="text-indigo-600 dark:text-indigo-400">→</span>
+                    </Link>
+
+                    <button
+                      className="w-full bg-red-500 hover:bg-red-600 text-white rounded-xl py-2 text-xs font-semibold transition cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        logout();
+                      }}
+                    >
+                      Logout
+                    </button>
                   </div>
                 )}
               </div>
 
-              <span className="text-xs font-semibold capitalize bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded border dark:border-gray-700">
-                👤 {currentRole || "user"}
-              </span>
-
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white rounded-lg px-3.5 py-1.5 text-xs font-semibold transition cursor-pointer shadow-sm"
-                onClick={logout}
-              >
-                Logout
-              </button>
             </div>
           )}
         </div>
@@ -278,6 +294,22 @@ const Navbar = () => {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800 px-6 py-5 flex flex-col gap-3 shadow-xl">
+          
+          {/* User Profile Info on Mobile Drawer */}
+          {user && (
+            <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800/60 p-3 rounded-xl border dark:border-gray-700 mb-1">
+              <img
+                src={dbUser?.photo || user?.photoURL || "https://i.ibb.co/m9YyZ2G/user.png"} 
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/30"
+                alt="Profile"
+              />
+              <div className="overflow-hidden flex-grow">
+                <p className="font-bold text-sm truncate">{dbUser?.name || user?.displayName}</p>
+                <p className="text-xs text-gray-400 truncate">{user.email}</p>
+              </div>
+            </div>
+          )}
+
           {!isDashboard && (
             <>
               <Link 
@@ -324,13 +356,23 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-3 pt-1">
-              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800/60 p-3 rounded-xl">
-                <span className="text-sm font-semibold">💰{currentCoin} Coins</span>
+              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800/60 p-3 rounded-xl border dark:border-gray-700">
+                <span className="text-sm font-semibold">🪙 {currentCoin} Coins</span>
                 <span className="text-xs uppercase bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold px-2.5 py-1 rounded-md">
                   {currentRole || "User"}
                 </span>
               </div>
               
+              {/* View Profile Link */}
+              <Link 
+                to="/dashboard/profile" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-2.5 font-semibold bg-gray-200 hover:bg-indigo-100 dark:bg-gray-700/60 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl shadow-sm transition flex items-center justify-center gap-2"
+              >
+                <span>View Profile</span>
+                <span className="text-indigo-600 dark:text-indigo-400">→</span>
+              </Link>
+
               {!isDashboard && (
                 <Link 
                   to="/dashboard" 

@@ -43,6 +43,9 @@ import Profile from "../pages/Dashboard/Profile/profile";
 import Settings from "../pages/Dashboard/Settings/Settings";
 import About from "../pages/About/About";
 import AllTasks from "../pages/AllTasks/AllTasks";
+import Contact from "../pages/Contact/Contact";
+import HelpSupport from "../pages/HelpSupport/HelpSupport";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
 
 const DashboardRedirect = () => {
   const { user: authUser, loading: authLoading } = useAuth();
@@ -85,8 +88,20 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      {path: "about",element: <About />},
-        {path: "tasks",element: <AllTasks/>},
+      { path: "about", element: <About /> },
+      { path: "tasks", element: <AllTasks /> },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "help",
+        element: <HelpSupport />,
+      },
+      {
+        path: "privacy",
+        element: <PrivacyPolicy />,
+      },
     ],
   },
   {

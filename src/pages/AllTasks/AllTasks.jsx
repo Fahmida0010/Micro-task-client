@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthProvider";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer";
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -19,14 +17,16 @@ const AllTasks = () => {
 
   useEffect(() => {
     // Backend API URL (Environment variable fallback to live/local server)
-    const baseURL = import.meta.env.VITE_API_URL ;
-    
+    const baseURL =
+      import.meta.env.VITE_API_URL ||
+      "https://micro-task-server-six.vercel.app";
+
     axios
       .get(`${baseURL}/tasks`, {
-        params: { taskType, status, maxAmount, deadline, sort }
+        params: { taskType, status, maxAmount, deadline, sort },
       })
-      .then(res => setTasks(res.data))
-      .catch(err => console.log("Task fetch error:", err));
+      .then((res) => setTasks(res.data))
+      .catch((err) => console.log("Task fetch error:", err));
   }, [taskType, status, maxAmount, deadline, sort]);
 
   // View Details Click Logic: Redirect to /login if not authenticated
@@ -40,12 +40,8 @@ const AllTasks = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-      
-      {/* Navbar Added */}
-      <Navbar />
-
       {/* Main Content Area */}
-      <main className="flex-grow pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+      <main className="flex-grow pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto w-full">
         <h2 className="text-3xl font-extrabold text-gray-800 dark:text-gray-100 mb-8">
           Available Tasks
         </h2>
@@ -57,10 +53,30 @@ const AllTasks = () => {
             onChange={(e) => setTaskType(e.target.value)}
             className="border border-gray-200 dark:border-gray-700 p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-800 outline-none transition-all cursor-pointer"
           >
-            <option value="" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">All Types</option>
-            <option value="Social" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Social</option>
-            <option value="Survey" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Survey</option>
-            <option value="Video" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Video</option>
+            <option
+              value=""
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              All Types
+            </option>
+            <option
+              value="Social"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Social
+            </option>
+            <option
+              value="Survey"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Survey
+            </option>
+            <option
+              value="Video"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Video
+            </option>
           </select>
 
           <select
@@ -68,10 +84,30 @@ const AllTasks = () => {
             onChange={(e) => setStatus(e.target.value)}
             className="border border-gray-200 dark:border-gray-700 p-3 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-medium focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800 outline-none transition-all cursor-pointer"
           >
-            <option value="" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">All Status</option>
-            <option value="active" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Active</option>
-            <option value="completed" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Completed</option>
-            <option value="closed" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Closed</option>
+            <option
+              value=""
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              All Status
+            </option>
+            <option
+              value="active"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Active
+            </option>
+            <option
+              value="completed"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Completed
+            </option>
+            <option
+              value="closed"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Closed
+            </option>
           </select>
 
           <input
@@ -94,53 +130,88 @@ const AllTasks = () => {
             onChange={(e) => setSort(e.target.value)}
             className="border border-gray-200 dark:border-gray-700 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-800 outline-none transition-all cursor-pointer"
           >
-            <option value="deadline" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Sort by Deadline</option>
-            <option value="amount" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">Sort by Highest Reward</option>
+            <option
+              value="deadline"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Sort by Deadline
+            </option>
+            <option
+              value="amount"
+              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+            >
+              Sort by Highest Reward
+            </option>
           </select>
         </div>
 
-        {/* TASK GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tasks.map(task => (
-            <div key={task._id} className="bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <h3 className="font-bold text-xl text-gray-800 dark:text-gray-100 mb-4 h-14 overflow-hidden">{task.title}</h3>
-              
-              <div className="space-y-3 mb-6">
-                <p className="text-gray-500 dark:text-gray-400 font-medium">
-                  <span className="text-gray-400 dark:text-gray-500 ml-1">Buyer:</span> <span className="text-gray-700 dark:text-gray-300">{task.Buyer_name}</span>
-                </p>
-                
-                <p className="text-gray-500 dark:text-gray-400 font-medium">
-                  <span className="text-gray-400 dark:text-gray-500 ml-1">Reward:</span> <span className="text-green-600 dark:text-green-400 font-bold">${task.payable_amount}</span>
-                </p>
-                
-                <p className="text-green-500 dark:text-green-400 font-medium">
-                  <span className="text-gray-400 dark:text-gray-500 ml-1">Status:</span> <span className="px-3 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 rounded-full text-xs font-bold uppercase">{task.status}</span>
-                </p>
-                
-                <p className="text-gray-700 dark:text-gray-300 font-medium">
-                  <span className="text-gray-400 dark:text-gray-500 ml-1">Deadline:</span> <span className="text-orange-600 dark:text-orange-400">{new Date(task.completion_date).toDateString()}</span>
-                </p>
+        {/* TASK GRID - Updated Responsive Layout (1 col -> 2 cols -> 4 cols) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {tasks.map((task) => (
+            <div
+              key={task._id}
+              className="bg-white dark:bg-gray-900 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between"
+            >
+              <div>
+                <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100 mb-3 h-12 overflow-hidden leading-snug">
+                  {task.title}
+                </h3>
+
+                <div className="space-y-2 mb-5 text-sm">
+                  <p className="text-gray-500 dark:text-gray-400 font-medium truncate">
+                    <span className="text-gray-400 dark:text-gray-500">
+                      Buyer:
+                    </span>{" "}
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {task.Buyer_name}
+                    </span>
+                  </p>
+
+                  <p className="text-gray-500 dark:text-gray-400 font-medium">
+                    <span className="text-gray-400 dark:text-gray-500">
+                      Reward:
+                    </span>{" "}
+                    <span className="text-green-600 dark:text-green-400 font-bold">
+                      ${task.payable_amount}
+                    </span>
+                  </p>
+
+                  <p className="text-green-500 dark:text-green-400 font-medium flex items-center gap-1">
+                    <span className="text-gray-400 dark:text-gray-500">
+                      Status:
+                    </span>
+                    <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 rounded-full text-[11px] font-bold uppercase">
+                      {task.status}
+                    </span>
+                  </p>
+
+                  <p className="text-gray-700 dark:text-gray-300 font-medium text-xs">
+                    <span className="text-gray-400 dark:text-gray-500">
+                      Deadline:
+                    </span>{" "}
+                    <span className="text-orange-600 dark:text-orange-400">
+                      {new Date(task.completion_date).toDateString()}
+                    </span>
+                  </p>
+                </div>
               </div>
 
               <button
                 onClick={() => handleViewDetails(task._id)}
-                className="w-full bg-gradient-to-r from-green-700 to-green-900 dark:from-green-800 dark:to-green-900 hover:from-green-600 hover:to-green-800 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-bold py-3 rounded-2xl shadow-lg transition-all active:scale-95 cursor-pointer"
+                className="w-full bg-gradient-to-r from-green-700 to-green-900 dark:from-green-800 dark:to-green-900 hover:from-green-600 hover:to-green-800 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-bold py-2.5 rounded-2xl shadow-md transition-all active:scale-95 cursor-pointer text-sm"
               >
                 View Details
               </button>
             </div>
           ))}
         </div>
-        
+
         {tasks.length === 0 && (
-          <p className="text-center text-gray-400 dark:text-gray-500 mt-20 text-lg">No tasks found matching your filters.</p>
+          <p className="text-center text-gray-400 dark:text-gray-500 mt-20 text-lg">
+            No tasks found matching your filters.
+          </p>
         )}
       </main>
-
-      {/* Footer Added */}
-      <Footer />
-
     </div>
   );
 };
