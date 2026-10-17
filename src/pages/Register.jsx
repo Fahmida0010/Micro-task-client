@@ -81,70 +81,79 @@ const Register = () => {
       setLoading(false);
     }
   };
-const handleGoogleLogin = async () => {
-  try {
-    const res = await googleLogin();
 
-    const email = res.user.email;
-
-    // 🔑 JWT
-    const tokenRes = await axios.post("/jwt", { email });
-    const token = tokenRes.data.token;
-    localStorage.setItem("access-token", token);
-
-    // 🔍 check user exists কিনা
-    let userRes;
+  const handleGoogleLogin = async () => {
     try {
-      userRes = await axios.get(`/users/${email}`, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await googleLogin();
+
+      const email = res.user.email;
+
+      // 🔑 JWT
+      const tokenRes = await axios.post("/jwt", { email });
+      const token = tokenRes.data.token;
+      localStorage.setItem("access-token", token);
+
+      // 🔍 check user exists কিনা
+      let userRes;
+      try {
+        userRes = await axios.get(`/users/${email}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+      } catch (err) {
+        userRes = null;
+      }
+
+      if (!userRes || !userRes.data) {
+        const newUser = {
+          name: res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+          role: "buyer", 
+          coin: 50,       
+        };
+
+        await axios.post("/users", newUser);
+
+        // redirect buyer
+        redirectByRole("buyer");
+      } else {
+        // existing user → redirect based on role
+        redirectByRole(userRes.data.role);
+      }
+
     } catch (err) {
-      userRes = null;
+      console.error(err);
+      setError("Google login failed");
     }
+  };
 
-    
-    if (!userRes || !userRes.data) {
-      const newUser = {
-        name: res.user.displayName,
-        email: res.user.email,
-        photo: res.user.photoURL,
-        role: "buyer", 
-        coin: 50,      
-      };
-
-      await axios.post("/users", newUser);
-
-      // redirect buyer
-      redirectByRole("buyer");
-    } else {
-      // existing user → redirect based on role
-      redirectByRole(userRes.data.role);
-    }
-
-  } catch (err) {
-    console.error(err);
-    setError("Google login failed");
-  }
-};
   return (
-    <div className="min-h-screen 
-    flex items-center justify-center bg-gradient-to-br 
-    from-indigo-100 to-purple-100 px-4 pt-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-gray-950 dark:to-gray-900 px-4 pt-12 transition-colors duration-300">
 
-      <div className="max-w-md w-full bg-white p-10 
-      rounded-xl shadow-xl">
+      <div className="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-10 rounded-xl shadow-xl transition-colors duration-300">
 
-        <h2 className="text-center text-3xl font-bold text-indigo-600">
+        <h2 className="text-center text-3xl font-bold text-indigo-600 dark:text-indigo-400">
           Create Account
         </h2>
 
         <form onSubmit={handleRegister} className="mt-6 space-y-4">
 
-          <input name="name" placeholder="Full Name" required className="w-full p-3 border rounded"/>
+          <input 
+            name="name" 
+            placeholder="Full Name" 
+            required 
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 transition-colors" 
+          />
 
-          <input name="email" type="email" placeholder="Email" required className="w-full p-3 border rounded"/>
+          <input 
+            name="email" 
+            type="email" 
+            placeholder="Email" 
+            required 
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 transition-colors" 
+          />
 
           {/* 📸 Image upload */}
           <input 
@@ -152,7 +161,7 @@ const handleGoogleLogin = async () => {
             type="file" 
             accept="image/*" 
             required 
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-950 file:text-indigo-700 dark:file:text-indigo-300 hover:file:bg-indigo-100 transition-colors"
           />
 
           <div className="relative">
@@ -161,39 +170,48 @@ const handleGoogleLogin = async () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               required
-              className="w-full p-3 border rounded"
+              className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 transition-colors"
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3">
-
-              {showPassword ? <AiOutlineEyeInvisible  size={23} /> : 
-              <AiOutlineEye  size={23}/>}
+            <button 
+              type="button" 
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer"
+            >
+              {showPassword ? <AiOutlineEyeInvisible size={23} /> : <AiOutlineEye size={23}/>}
             </button>
           </div>
 
-          <select name="role" required className="w-full p-3 border rounded">
-            <option value="">Select Role</option>
-            <option value="Worker">Worker</option>
-            <option value="Buyer">Buyer</option>
+          <select 
+            name="role" 
+            required 
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 transition-colors"
+          >
+            <option value="" className="bg-white dark:bg-gray-900 text-gray-500">Select Role</option>
+            <option value="Worker" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">Worker</option>
+            <option value="Buyer" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">Buyer</option>
           </select>
 
-          {error && <p className="text-red-500 text-center">{error}</p>}
+          {error && <p className="text-red-500 dark:text-red-400 text-center text-sm">{error}</p>}
 
-          <button className="w-full bg-indigo-700 
-          hover:bg-indigo-500 text-white py-3 rounded">
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-indigo-700 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white py-3 rounded transition font-medium cursor-pointer disabled:bg-indigo-300 dark:disabled:bg-indigo-900"
+          >
             {loading ? "Uploading..." : "Register"}
           </button>
 
-   <button onClick={handleGoogleLogin}
-          className="mt-4 w-full flex justify-center
-          hover:bg-pink-300 gap-2 border py-2 rounded">
-
-          <FcGoogle /> Continue with Google
-        </button>
+          <button 
+            type="button"
+            onClick={handleGoogleLogin}
+            className="mt-4 w-full flex items-center justify-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-200 gap-2 border border-gray-200 dark:border-gray-700 py-2.5 rounded transition cursor-pointer"
+          >
+            <FcGoogle size={20} /> Continue with Google
+          </button>
         </form>
 
-        <p className="mt-4 text-center">
-          Already have account? <Link to="/login" className="text-indigo-600">Login</Link>
+        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+          Already have an account? <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">Login</Link>
         </p>
 
       </div>

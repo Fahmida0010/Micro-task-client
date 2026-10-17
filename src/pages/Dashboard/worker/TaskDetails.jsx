@@ -101,37 +101,36 @@ const TaskDetails = () => {
 
   if (loading) return <Loading />;
 
-  if (!task) return <div className="text-center py-10">Task not found</div>;
+  if (!task) return <div className="text-center py-10 dark:text-gray-300">Task not found</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-8 mt-14">
+    <div className="max-w-4xl mx-auto p-4 md:p-8 mt-14 min-h-screen transition-colors duration-300">
       <Toaster position="top-center" reverseOrder={false} />
 
-      <h1 className="text-3xl font-bold mb-6">Task Details</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Task Details</h1>
 
       {/* Task Info Card */}
-      <div className="bg-white shadow-lg rounded-xl p-6 mb-8 border border-gray-200">
-        <h2 className="text-2xl text-pink-700 font-semibold mb-4">{task.title}</h2>
+      <div className="bg-white dark:bg-gray-900 shadow-lg rounded-xl p-6 mb-8 border border-gray-200 dark:border-gray-800">
+        <h2 className="text-2xl text-pink-700 dark:text-pink-400 font-semibold mb-4">{task.title}</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 
-        text-purple-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-purple-700 dark:text-purple-300">
           <div>
             <p>
-              <strong className="text-yellow-800">Buyer:</strong> {task.Buyer_name}
+              <strong className="text-yellow-800 dark:text-yellow-400">Buyer:</strong> {task.Buyer_name}
             </p>
             <p>
-              <strong  className="text-yellow-800">Email:</strong> {task.Buyer_email}
+              <strong className="text-yellow-800 dark:text-yellow-400">Email:</strong> {task.Buyer_email}
             </p>
           </div>
           <div>
             <p>
-              <strong  className="text-yellow-800">Pay:</strong> ${task.payable_amount}
+              <strong className="text-yellow-800 dark:text-yellow-400">Pay:</strong> ${task.payable_amount}
             </p>
             <p>
-              <strong  className="text-yellow-800">Required Workers:</strong> {task.required_workers}
+              <strong className="text-yellow-800 dark:text-yellow-400">Required Workers:</strong> {task.required_workers}
             </p>
             <p>
-              <strong  className="text-yellow-800">Deadline:</strong>{" "}
+              <strong className="text-yellow-800 dark:text-yellow-400">Deadline:</strong>{" "}
               {new Date(task.completion_date).toDateString()}
             </p>
           </div>
@@ -139,28 +138,28 @@ const TaskDetails = () => {
       </div>
 
       {/* Submission Form */}
-      <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-4">Submit Your Work</h2>
+      <div className="bg-white dark:bg-gray-900 shadow-lg rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Submit Your Work</h2>
 
         {alreadySubmitted ? (
-          <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 px-4 py-5 rounded-lg">
+          <div className="bg-yellow-50 dark:bg-yellow-950/40 border border-yellow-400 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300 px-4 py-5 rounded-lg">
             <p className="font-medium">You have already submitted this task.</p>
             <p className="mt-1">Waiting for buyer review.</p>
           </div>
         ) : task.required_workers <= 0 ? (
-          <div className="bg-red-50 border border-red-400 text-red-800 px-4 py-5 rounded-lg">
+          <div className="bg-red-50 dark:bg-red-950/40 border border-red-400 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-5 rounded-lg">
             <p className="font-medium">No more submission slots available.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
+              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
                 Submission Details 
               </label>
               <textarea
                 value={submissionDetails}
                 onChange={(e) => setSubmissionDetails(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-3 h-40 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 h-40 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-colors"
                 placeholder="Write your submission details here... (screenshot link, explanation, etc.)"
                 required
                 disabled={submitting}
@@ -170,11 +169,11 @@ const TaskDetails = () => {
             <button
               type="submit"
               disabled={submitting || alreadySubmitted || task.required_workers <= 0}
-              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all
+              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all cursor-pointer
                 ${
                   submitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700 active:bg-green-800"
+                    ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700 active:bg-green-800 dark:bg-green-500 dark:hover:bg-green-600"
                 }`}
             >
               {submitting ? "Submitting..." : "Submit Task"}

@@ -37,65 +37,65 @@ const WorkerHome = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-950 dark:to-gray-900">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-950 dark:to-gray-900 p-4 md:p-6 lg:p-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-extrabold mb-8 mt-8 text-center md:text-left text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600 animate-pulse">
+        <h1 className="text-3xl md:text-4xl font-extrabold mb-8 mt-8 text-center md:text-left text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-400 dark:to-green-400 animate-pulse">
           Welcome to Your Worker Dashboard, {user?.displayName || "Worker"}!
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white shadow-xl rounded-2xl p-6 text-center transform hover:scale-105 transition-transform duration-300 border border-blue-200">
+          <div className="bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-6 text-center transform hover:scale-105 transition-transform duration-300 border border-blue-200 dark:border-gray-800">
             <div className="flex justify-center mb-4">
-              <FaTasks className="text-5xl text-blue-600" />
+              <FaTasks className="text-5xl text-blue-600 dark:text-blue-400" />
             </div>
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800">Total Submissions</h2>
-            <p className="text-4xl md:text-5xl font-bold text-blue-600 mt-2 animate-bounce">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">Total Submissions</h2>
+            <p className="text-4xl md:text-5xl font-bold text-blue-600 dark:text-blue-400 mt-2 animate-bounce">
               {stats.totalSubmissions}
             </p>
           </div>
 
-          <div className="bg-white shadow-xl rounded-2xl p-6 text-center transform hover:scale-105 transition-transform duration-300 border border-yellow-200">
+          <div className="bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-6 text-center transform hover:scale-105 transition-transform duration-300 border border-yellow-200 dark:border-gray-800">
             <div className="flex justify-center mb-4">
-              <FaHourglassHalf className="text-5xl text-yellow-600" />
+              <FaHourglassHalf className="text-5xl text-yellow-600 dark:text-yellow-400" />
             </div>
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800">Pending Tasks</h2>
-            <p className="text-4xl md:text-5xl font-bold text-yellow-600 mt-2 animate-bounce">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">Pending Tasks</h2>
+            <p className="text-4xl md:text-5xl font-bold text-yellow-600 dark:text-yellow-400 mt-2 animate-bounce">
               {stats.totalPending}
             </p>
           </div>
 
-          <div className="bg-white shadow-xl rounded-2xl p-6 text-center transform hover:scale-105 transition-transform duration-300 border border-green-200">
+          <div className="bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-6 text-center transform hover:scale-105 transition-transform duration-300 border border-green-200 dark:border-gray-800">
             <div className="flex justify-center mb-4">
-              <FaDollarSign className="text-5xl text-green-600" />
+              <FaDollarSign className="text-5xl text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800">Total Earnings</h2>
-            <p className="text-4xl md:text-5xl font-bold text-green-600 mt-2 animate-bounce">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">Total Earnings</h2>
+            <p className="text-4xl md:text-5xl font-bold text-green-600 dark:text-green-400 mt-2 animate-bounce">
               ${stats.totalEarning}
             </p>
           </div>
         </div>
 
         {/* ──────────────────────────────────────────────── */}
-        {/* Only this part is changed – Approved Submissions */}
+        {/* Approved Submissions Section */}
         {/* ──────────────────────────────────────────────── */}
 
-        <div className="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-gray-200">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-2 text-gray-800">
-            <FaCheckCircle className="text-green-600" /> Approved Submissions
+        <div className="bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-800">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-2 text-gray-800 dark:text-gray-100">
+            <FaCheckCircle className="text-green-600 dark:text-green-400" /> Approved Submissions
           </h2>
 
           {stats.approvedSubmissions.length > 0 ? (
             <>
               {/* Desktop / Tablet Table */}
               <div className="hidden md:block overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                   <thead className="bg-gradient-to-r from-green-600 to-teal-600 text-white">
                     <tr>
                       <th scope="col" className="px-6 py-4 text-left font-semibold rounded-tl-xl">
@@ -112,25 +112,25 @@ const WorkerHome = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-100">
+                  <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800">
                     {stats.approvedSubmissions.map((sub, idx) => (
                       <tr
                         key={idx}
-                        className="hover:bg-green-50 transition-colors duration-200"
+                        className="hover:bg-green-50 dark:hover:bg-gray-800 transition-colors duration-200"
                       >
-                        <td className="px-6 py-5 whitespace-nowrap font-medium text-gray-900">
+                        <td className="px-6 py-5 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
                           {sub.task_title}
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-center">
-                          <span className="text-xl font-bold text-green-700">
+                          <span className="text-xl font-bold text-green-700 dark:text-green-400">
                             ${sub.payable_amount}
                           </span>
                         </td>
-                        <td className="px-6 py-5 whitespace-nowrap text-center text-gray-700">
+                        <td className="px-6 py-5 whitespace-nowrap text-center text-gray-700 dark:text-gray-300">
                           {sub.Buyer_name}
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-center">
-                          <span className="inline-flex px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                          <span className="inline-flex px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
                             {sub.status || "Approved"}
                           </span>
                         </td>
@@ -145,25 +145,25 @@ const WorkerHome = () => {
                 {stats.approvedSubmissions.map((sub, idx) => (
                   <div
                     key={idx}
-                    className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <div className="font-semibold text-gray-900 mb-3 text-lg">
+                    <div className="font-semibold text-gray-900 dark:text-gray-100 mb-3 text-lg">
                       {sub.task_title}
                     </div>
                     <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                       <div>
-                        <div className="text-gray-500">Pay</div>
-                        <div className="text-xl font-bold text-green-700">
+                        <div className="text-gray-500 dark:text-gray-400">Pay</div>
+                        <div className="text-xl font-bold text-green-700 dark:text-green-400">
                           ${sub.payable_amount}
                         </div>
                       </div>
                       <div>
-                        <div className="text-gray-500">Buyer</div>
-                        <div className="font-medium text-gray-800">{sub.Buyer_name}</div>
+                        <div className="text-gray-500 dark:text-gray-400">Buyer</div>
+                        <div className="font-medium text-gray-800 dark:text-gray-200">{sub.Buyer_name}</div>
                       </div>
                     </div>
                     <div>
-                      <span className="inline-flex px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                      <span className="inline-flex px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
                         {sub.status || "Approved"}
                       </span>
                     </div>
@@ -172,8 +172,8 @@ const WorkerHome = () => {
               </div>
             </>
           ) : (
-            <div className="text-center py-12 text-gray-500">
-              <FaCheckCircle className="mx-auto text-6xl text-gray-300 mb-4" />
+            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+              <FaCheckCircle className="mx-auto text-6xl text-gray-300 dark:text-gray-700 mb-4" />
               <p className="text-lg">There is no approved submission yet.</p>
             </div>
           )}
