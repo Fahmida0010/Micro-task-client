@@ -1,25 +1,49 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAuth } from "../../context/AuthProvider";
+import axiosSecure from "../../hooks/useAxiosSecure";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const coin = searchParams.get("coin");
+  const email = searchParams.get("email");
+  
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const hasRequested = useRef(false); // Duplicate request theke bachar jonno
 
   useEffect(() => {
-    if (user?.email) {
-    
-      queryClient.invalidateQueries(["dbUser", user?.email]);
-      queryClient.invalidateQueries(["profileUser", user?.email]);
-      
-      window.dispatchEvent(new Event("profileUpdated"));
+    const targetEmail = email || user?.email;
+    const coinAmount = Number(coin);
+
+    if (targetEmail && coinAmount && !hasRequested.current) {
+      hasRequested.current = true;
+
+      // Apnar backend-er `/users/increase-coins` route call kora holo
+      axiosSecure
+        .patch("/users/increase-coins", { 
+          email: targetEmail, 
+          coin: coinAmount 
+        })
+        .then((res) => {
+          console.log("Coin increased:", res.data);
+          
+          // React Query cache invalidate kora jate navbar auto-update hoye jay
+          queryClient.invalidateQueries(["dbUser", targetEmail]);
+          queryClient.invalidateQueries(["profileUser", targetEmail]);
+          queryClient.invalidateQueries(["userRole", targetEmail]);
+          
+          // Navbar ba onnanno component ke signal dewar jonno custom event
+          window.dispatchEvent(new Event("profileUpdated"));
+        })
+        .catch((err) => {
+          console.error("Failed to increase coins in DB:", err);
+        });
     }
-  }, [user?.email, queryClient]);
+  }, [email, coin, user?.email, queryClient]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
