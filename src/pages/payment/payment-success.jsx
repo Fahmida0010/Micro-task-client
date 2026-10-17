@@ -1,81 +1,44 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
-import axiosSecure from "../../hooks/useAxiosSecure";
-import Footer from "../../components/Footer/Footer";
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../../context/AuthProvider"; 
+import { FaCheckCircle } from "react-icons/fa";
 
 const PaymentSuccess = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [coinsPurchased, setCoinsPurchased] = useState(0); // just purchased coins
-  const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const coin = searchParams.get("coin");
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const coin = Number(params.get("coin"));
-    const email = params.get("email");
-    const price = Number(params.get("price")) 
-
-    if (!email || !coin || coin <= 0) {
-      toast.error("Invalid payment data!");
-      setLoading(false);
-      return;
+    if (user?.email) {
+    
+      queryClient.invalidateQueries(["dbUser", user?.email]);
+      queryClient.invalidateQueries(["profileUser", user?.email]);
+      
+      window.dispatchEvent(new Event("profileUpdated"));
     }
-
-    const processPayment = async () => {
-      try {
-        // 1️⃣ Update user's coins in DB (sum with existing coins)
-        await axiosSecure.patch("/users/increase-coins", {
-          email,
-          coin,
-        });
-        setCoinsPurchased(coin); // only purchased coin show in success page
-        toast.success(`${coin} coins purchased successfully!`);
-
-        // 2️⃣ Save payment info
-        await axiosSecure.post("/payments", {
-          email,
-          coins: coin,
-          amount: price,
-        });
-        toast.success("Payment saved successfully!");
-      } catch (err) {
-        console.error("Coin increase or payment save failed:", err);
-        toast.error("Payment processing failed");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    processPayment();
-  }, [location.search]);
-
-  if (loading) {
-    return (
-      <div className="p-10 text-center text-lg font-medium">
-        Processing payment, please wait...
-      </div>
-    );
-  }
+  }, [user?.email, queryClient]);
 
   return (
-    <div className="p-8 text-center space-y-6">
-      <h1 className="text-3xl font-bold text-green-600">
-        Payment Successful 🎉
-      </h1>
+    <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 max-w-md w-full">
+        <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-4 animate-bounce" />
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+          Payment Successful 🎉
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
+          You successfully purchased <span className="font-bold text-indigo-600 dark:text-indigo-400">{coin || "the"}</span> coins.
+        </p>
 
-      <p className="text-lg text-pink-700">
-        You purchased {coinsPurchased} coins.
-      </p>
-
-      <button
-        onClick={() => navigate("/dashboard")}
-        className="px-8 py-3 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
-      >
-        Go to Dashboard
-      </button>
-
-      <Footer />
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-xl transition duration-200 shadow-md cursor-pointer"
+        >
+          Go to Dashboard
+        </button>
+      </div>
     </div>
   );
 };
