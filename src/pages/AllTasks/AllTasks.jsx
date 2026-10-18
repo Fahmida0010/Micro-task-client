@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../context/AuthProvider";
 import Loading from "../../components/Loader/Loading";
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
 
   // Filters
@@ -18,35 +16,39 @@ const AllTasks = () => {
   const [sort, setSort] = useState("deadline");
 
   useEffect(() => {
-    // API Call শুরু হওয়ার সময় লোডার দেখানো
     setLoading(true);
 
-    // Backend API URL
     const baseURL =
       import.meta.env.VITE_API_URL ||
       "https://micro-task-server-six.vercel.app";
 
+    // 🟢 Shudhu jeigula input e value ache oigulai params e pathabo (Clean Query Params)
+    const queryParams = {};
+    if (taskType) queryParams.taskType = taskType;
+    if (status) queryParams.status = status;
+    if (maxAmount) queryParams.maxAmount = maxAmount;
+    if (deadline) queryParams.deadline = deadline;
+    if (sort) queryParams.sort = sort;
+
+    // 🟢 Direct axios call without token for public tasks access
     axios
-      .get(`${baseURL}/tasks`, {
-        params: { taskType, status, maxAmount, deadline, sort },
-      })
+      .get(`${baseURL}/tasks`, { params: queryParams })
       .then((res) => {
-        setTasks(res.data);
-        setLoading(false); // ✅ ডেটা আসার পর লোডিং বন্ধ করা হয়েছে
+        // Backend array ba object return korleo safely set kora
+        const fetchedTasks = Array.isArray(res.data) ? res.data : res.data.tasks || [];
+        setTasks(fetchedTasks);
+        setLoading(false);
       })
       .catch((err) => {
-        console.log("Task fetch error:", err);
-        setLoading(false); // ✅ কোনো এরর আসলেও লোডিং বন্ধ হবে
+        console.error("Task fetch error:", err);
+        setTasks([]);
+        setLoading(false);
       });
   }, [taskType, status, maxAmount, deadline, sort]);
 
-  // View Details Click Logic
+  // View Details Logic - Directly navigates
   const handleViewDetails = (id) => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      navigate(`/dashboard/task-details/${id}`);
-    }
+    navigate(`/dashboard/task-details/${id}`);
   };
 
   if (loading) {
@@ -68,28 +70,16 @@ const AllTasks = () => {
             onChange={(e) => setTaskType(e.target.value)}
             className="border border-gray-200 dark:border-gray-700 p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-800 outline-none transition-all cursor-pointer"
           >
-            <option
-              value=""
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               All Types
             </option>
-            <option
-              value="Social"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="Social" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Social
             </option>
-            <option
-              value="Survey"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="Survey" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Survey
             </option>
-            <option
-              value="Video"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="Video" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Video
             </option>
           </select>
@@ -99,28 +89,16 @@ const AllTasks = () => {
             onChange={(e) => setStatus(e.target.value)}
             className="border border-gray-200 dark:border-gray-700 p-3 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-medium focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800 outline-none transition-all cursor-pointer"
           >
-            <option
-              value=""
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               All Status
             </option>
-            <option
-              value="active"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="active" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Active
             </option>
-            <option
-              value="completed"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="completed" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Completed
             </option>
-            <option
-              value="closed"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="closed" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Closed
             </option>
           </select>
@@ -145,88 +123,76 @@ const AllTasks = () => {
             onChange={(e) => setSort(e.target.value)}
             className="border border-gray-200 dark:border-gray-700 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-800 outline-none transition-all cursor-pointer"
           >
-            <option
-              value="deadline"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="deadline" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Sort by Deadline
             </option>
-            <option
-              value="amount"
-              className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
-            >
+            <option value="amount" className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
               Sort by Highest Reward
             </option>
           </select>
         </div>
 
-        {/* TASK GRID - Responsive Layout (1 col -> 2 cols -> 4 cols) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {tasks.map((task) => (
-            <div
-              key={task._id}
-              className="bg-white dark:bg-gray-900 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between"
-            >
-              <div>
-                <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100 mb-3 h-12 overflow-hidden leading-snug">
-                  {task.title}
-                </h3>
-
-                <div className="space-y-2 mb-5 text-sm">
-                  <p className="text-gray-500 dark:text-gray-400 font-medium truncate">
-                    <span className="text-gray-400 dark:text-gray-500">
-                      Buyer:
-                    </span>{" "}
-                    <span className="text-gray-700 dark:text-gray-300">
-                      {task.Buyer_name || "Unknown"}
-                    </span>
-                  </p>
-
-                  <p className="text-gray-500 dark:text-gray-400 font-medium">
-                    <span className="text-gray-400 dark:text-gray-500">
-                      Reward:
-                    </span>{" "}
-                    <span className="text-green-600 dark:text-green-400 font-bold">
-                      ${task.payable_amount}
-                    </span>
-                  </p>
-
-                  <p className="text-green-500 dark:text-green-400 font-medium flex items-center gap-1">
-                    <span className="text-gray-400 dark:text-gray-500">
-                      Status:
-                    </span>
-                    <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 rounded-full text-[11px] font-bold uppercase">
-                      {task.status || "active"}
-                    </span>
-                  </p>
-
-                  <p className="text-gray-700 dark:text-gray-300 font-medium text-xs">
-                    <span className="text-gray-400 dark:text-gray-500">
-                      Deadline:
-                    </span>{" "}
-                    <span className="text-orange-600 dark:text-orange-400">
-                      {task.completion_date
-                        ? new Date(task.completion_date).toDateString()
-                        : "N/A"}
-                    </span>
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => handleViewDetails(task._id)}
-                className="w-full bg-gradient-to-r from-green-700 to-green-900 dark:from-green-800 dark:to-green-900 hover:from-green-600 hover:to-green-800 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-bold py-2.5 rounded-2xl shadow-md transition-all active:scale-95 cursor-pointer text-sm"
+        {/* TASK GRID */}
+        {tasks.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {tasks.map((task) => (
+              <div
+                key={task._id}
+                className="bg-white dark:bg-gray-900 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between"
               >
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
+                <div>
+                  <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100 mb-3 h-12 overflow-hidden leading-snug">
+                    {task.title}
+                  </h3>
 
-        {tasks.length === 0 && (
-          <p className="text-center text-gray-400 dark:text-gray-500 mt-20 text-lg">
-            No tasks found matching your filters.
-          </p>
+                  <div className="space-y-2 mb-5 text-sm">
+                    <p className="text-gray-500 dark:text-gray-400 font-medium truncate">
+                      <span className="text-gray-400 dark:text-gray-500">Buyer:</span>{" "}
+                      <span className="text-gray-700 dark:text-gray-300">
+                        {task.Buyer_name || "Unknown"}
+                      </span>
+                    </p>
+
+                    <p className="text-gray-500 dark:text-gray-400 font-medium">
+                      <span className="text-gray-400 dark:text-gray-500">Reward:</span>{" "}
+                      <span className="text-green-600 dark:text-green-400 font-bold">
+                        ${task.payable_amount}
+                      </span>
+                    </p>
+
+                    <p className="text-green-500 dark:text-green-400 font-medium flex items-center gap-1">
+                      <span className="text-gray-400 dark:text-gray-500">Status:</span>
+                      <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 rounded-full text-[11px] font-bold uppercase">
+                        {task.status || "active"}
+                      </span>
+                    </p>
+
+                    <p className="text-gray-700 dark:text-gray-300 font-medium text-xs">
+                      <span className="text-gray-400 dark:text-gray-500">Deadline:</span>{" "}
+                      <span className="text-orange-600 dark:text-orange-400">
+                        {task.completion_date
+                          ? new Date(task.completion_date).toDateString()
+                          : "N/A"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleViewDetails(task._id)}
+                  className="w-full bg-gradient-to-r from-green-700 to-green-900 dark:from-green-800 dark:to-green-900 hover:from-green-600 hover:to-green-800 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-bold py-2.5 rounded-2xl shadow-md transition-all active:scale-95 cursor-pointer text-sm"
+                >
+                  View Details
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-800 mt-6">
+            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">
+              No tasks found matching your filters.
+            </p>
+          </div>
         )}
       </main>
     </div>
