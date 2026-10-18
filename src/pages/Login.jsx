@@ -104,14 +104,14 @@ const Login = () => {
             </button>
             <button
               type="button"
-              onClick={() => fillDemoCredentials("buyer@gmail.com", "Buyer123@")}
+              onClick={() => fillDemoCredentials("fahmida334@gmail.com", "Buyer123@")}
               className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs py-1.5 px-2 rounded font-medium transition cursor-pointer"
             >
               Buyer
             </button>
             <button
               type="button"
-              onClick={() => fillDemoCredentials("worker@gmail.com", "Worker123@")}
+              onClick={() => fillDemoCredentials("diana56@gmail.com", "Worker123@")}
               className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs py-1.5 px-2 rounded font-medium transition cursor-pointer"
             >
               Worker

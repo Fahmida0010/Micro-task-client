@@ -14,15 +14,65 @@ import {
   Legend,
 } from "recharts";
 
+// 🌟 Custom Skeleton Loader for Admin Home Page
+const AdminHomeSkeleton = () => {
+  return (
+    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen animate-pulse transition-colors duration-300">
+      {/* Title Skeleton */}
+      <div className="h-9 bg-gray-200 dark:bg-gray-800 rounded-lg w-56 mb-8 mt-10"></div>
+
+      {/* Stats Cards Skeleton (4 Cards) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {[1, 2, 3, 4].map((item) => (
+          <div
+            key={item}
+            className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center space-x-4"
+          >
+            <div className="w-14 h-14 bg-gray-200 dark:bg-gray-800 rounded-lg flex-shrink-0"></div>
+            <div className="space-y-2 w-full">
+              <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/2"></div>
+              <div className="h-7 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Analytics Charts Skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Bar Chart Skeleton */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/4"></div>
+          <div className="h-80 bg-gray-100 dark:bg-gray-800/50 rounded-xl w-full"></div>
+        </div>
+
+        {/* Pie Chart Skeleton */}
+        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/3"></div>
+          <div className="h-80 flex justify-center items-center">
+            <div className="w-52 h-52 rounded-full border-8 border-gray-200 dark:border-gray-800"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AdminHome = () => {
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axiosSecure.get("/admin-stats").then((res) => {
-      setStats(res.data);
-      setLoading(false);
-    });
+    setLoading(true);
+    axiosSecure
+      .get("/admin-stats")
+      .then((res) => {
+        setStats(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Admin stats fetch error:", err);
+        setLoading(false);
+      });
   }, []);
 
   const statCards = [
@@ -49,27 +99,28 @@ const AdminHome = () => {
   const COLORS = ["#3B82F6", "#10B981"];
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg text-blue-500"></span>
-      </div>
-    );
+    return <AdminHomeSkeleton />;
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl font-bold text-gray-800 mb-8 mt-10">Admin Dashboard</h2>
+    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen transition-colors duration-300">
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 mt-10">
+        Admin Dashboard
+      </h2>
 
       {/* Stats Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {statCards.map((card, index) => (
-          <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
-            <div className={`${card.color} p-4 rounded-lg text-white text-2xl`}>
+          <div
+            key={index}
+            className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center space-x-4 hover:shadow-md transition-shadow"
+          >
+            <div className={`${card.color} p-4 rounded-lg text-white text-2xl flex-shrink-0`}>
               {card.icon}
             </div>
             <div>
-              <p className="text-gray-500 text-sm font-medium">{card.title}</p>
-              <h3 className="text-2xl font-bold text-gray-800">{card.value}</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{card.title}</p>
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{card.value}</h3>
             </div>
           </div>
         ))}
@@ -78,14 +129,21 @@ const AdminHome = () => {
       {/* Analytics Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Overview Bar Chart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-6">Platform Overview</h3>
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">Platform Overview</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
-                <XAxis dataKey="name" stroke="#6B7280" />
-                <YAxis stroke="#6B7280" />
-                <Tooltip />
+                <XAxis dataKey="name" stroke="#9CA3AF" />
+                <YAxis stroke="#9CA3AF" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    borderColor: '#374151',
+                    borderRadius: '0.75rem',
+                    color: '#FFF' 
+                  }} 
+                />
                 <Bar dataKey="count" fill="#4F46E5" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -93,8 +151,8 @@ const AdminHome = () => {
         </div>
 
         {/* User Ratio Pie Chart */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
-          <h3 className="text-xl font-bold text-gray-800 mb-6 self-start">User Ratio</h3>
+        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6 self-start">User Ratio</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -111,7 +169,14 @@ const AdminHome = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    borderColor: '#374151',
+                    borderRadius: '0.75rem',
+                    color: '#FFF' 
+                  }} 
+                />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

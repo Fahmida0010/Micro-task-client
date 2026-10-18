@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthProvider";
+import Loading from "../../components/Loader/Loading";
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   // Filters
   const [taskType, setTaskType] = useState("");
@@ -16,7 +18,10 @@ const AllTasks = () => {
   const [sort, setSort] = useState("deadline");
 
   useEffect(() => {
-    // Backend API URL (Environment variable fallback to live/local server)
+    // API Call শুরু হওয়ার সময় লোডার দেখানো
+    setLoading(true);
+
+    // Backend API URL
     const baseURL =
       import.meta.env.VITE_API_URL ||
       "https://micro-task-server-six.vercel.app";
@@ -25,11 +30,17 @@ const AllTasks = () => {
       .get(`${baseURL}/tasks`, {
         params: { taskType, status, maxAmount, deadline, sort },
       })
-      .then((res) => setTasks(res.data))
-      .catch((err) => console.log("Task fetch error:", err));
+      .then((res) => {
+        setTasks(res.data);
+        setLoading(false); // ✅ ডেটা আসার পর লোডিং বন্ধ করা হয়েছে
+      })
+      .catch((err) => {
+        console.log("Task fetch error:", err);
+        setLoading(false); // ✅ কোনো এরর আসলেও লোডিং বন্ধ হবে
+      });
   }, [taskType, status, maxAmount, deadline, sort]);
 
-  // View Details Click Logic: Redirect to /login if not authenticated
+  // View Details Click Logic
   const handleViewDetails = (id) => {
     if (!user) {
       navigate("/login");
@@ -37,6 +48,10 @@ const AllTasks = () => {
       navigate(`/dashboard/task-details/${id}`);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
@@ -47,7 +62,7 @@ const AllTasks = () => {
         </h2>
 
         {/* FILTER SECTION */}
-        <div className="grid md:grid-cols-5 gap-4 mb-10 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-10 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <select
             value={taskType}
             onChange={(e) => setTaskType(e.target.value)}
@@ -145,8 +160,8 @@ const AllTasks = () => {
           </select>
         </div>
 
-        {/* TASK GRID - Updated Responsive Layout (1 col -> 2 cols -> 4 cols) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* TASK GRID - Responsive Layout (1 col -> 2 cols -> 4 cols) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tasks.map((task) => (
             <div
               key={task._id}
@@ -163,7 +178,7 @@ const AllTasks = () => {
                       Buyer:
                     </span>{" "}
                     <span className="text-gray-700 dark:text-gray-300">
-                      {task.Buyer_name}
+                      {task.Buyer_name || "Unknown"}
                     </span>
                   </p>
 
@@ -181,7 +196,7 @@ const AllTasks = () => {
                       Status:
                     </span>
                     <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 rounded-full text-[11px] font-bold uppercase">
-                      {task.status}
+                      {task.status || "active"}
                     </span>
                   </p>
 
@@ -190,7 +205,9 @@ const AllTasks = () => {
                       Deadline:
                     </span>{" "}
                     <span className="text-orange-600 dark:text-orange-400">
-                      {new Date(task.completion_date).toDateString()}
+                      {task.completion_date
+                        ? new Date(task.completion_date).toDateString()
+                        : "N/A"}
                     </span>
                   </p>
                 </div>

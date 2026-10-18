@@ -3,11 +3,64 @@ import { FaTrashAlt, FaTasks, FaUsers, FaDollarSign, FaUser, FaEnvelope } from "
 import Swal from "sweetalert2";
 import axiosSecure from "../../../hooks/useAxiosSecure";
 
+// 🌟 Custom Skeleton Loader for ManageTasks Page
+const ManageTasksSkeleton = () => {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Mobile Card Skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="bg-white dark:bg-gray-900 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 space-y-4"
+          >
+            <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/2"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-2/3"></div>
+            </div>
+            <div className="flex justify-between items-center pt-3 border-t border-gray-100 dark:border-gray-800">
+              <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-24"></div>
+              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table Skeleton */}
+      <div className="hidden md:block bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 space-y-4">
+        <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-full mb-4"></div>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex justify-between items-center gap-4 py-3">
+            <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-1/4"></div>
+            <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-1/6"></div>
+            <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-1/5"></div>
+            <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-12"></div>
+            <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-12"></div>
+            <div className="w-8 h-8 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const ManageTasks = () => {
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axiosSecure.get("/managetasks").then((res) => setTasks(res.data));
+    setLoading(true);
+    axiosSecure
+      .get("/managetasks")
+      .then((res) => {
+        setTasks(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Manage tasks fetch error:", err);
+        setLoading(false);
+      });
   }, []);
 
   const handleDelete = (email) => {
@@ -21,7 +74,8 @@ const ManageTasks = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/tasks/${email}`)
+        axiosSecure
+          .delete(`/tasks/${email}`)
           .then(() => {
             setTasks(tasks.filter((task) => task.Buyer_email !== email));
             Swal.fire("Deleted!", "The task has been deleted.", "success");
@@ -46,16 +100,21 @@ const ManageTasks = () => {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-3">
             <FaTasks className="text-indigo-600 dark:text-indigo-400" /> Manage Tasks
           </h2>
-          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Review and manage all posted tasks from buyers.</p>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
+            Review and manage all posted tasks from buyers.
+          </p>
         </div>
         <div className="bg-indigo-600 dark:bg-indigo-500 text-white px-5 py-2 rounded-xl shadow-md font-semibold text-center sm:text-left text-sm sm:text-base">
           Total Tasks: {tasks.length}
         </div>
       </div>
 
-      {tasks.length > 0 ? (
+      {/* Condition 1: Skeleton Loading UI */}
+      {loading ? (
+        <ManageTasksSkeleton />
+      ) : tasks.length > 0 ? (
         <>
-          {/* 📱 Mobile & Tablet View: CARD METHOD (Visible on small screens) */}
+          {/* 📱 Mobile & Tablet View: CARD METHOD */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
             {tasks.map((task) => (
               <div 
@@ -100,7 +159,7 @@ const ManageTasks = () => {
             ))}
           </div>
 
-          {/* 💻 Desktop & Laptop View: TABLE METHOD (Hidden on small screens) */}
+          {/* 💻 Desktop View: TABLE METHOD */}
           <div className="hidden md:block bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
@@ -157,6 +216,7 @@ const ManageTasks = () => {
           </div>
         </>
       ) : (
+        /* Condition 2: No Data UI */
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex flex-col items-center text-gray-400 dark:text-gray-500">
             <FaTasks size={40} className="mb-2 opacity-25" />

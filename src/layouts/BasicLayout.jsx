@@ -8,9 +8,9 @@ const BasicLayout = () => {
     const { loading } = useAuth();
   return (
     <>
+     <Navbar />
      {loading && <Loading/>}
-      <Navbar />
-      <main className="min-h-[80vh] px-4">
+        <main className="min-h-[80vh] px-4">
         <Outlet />
       </main>
       <Footer />
