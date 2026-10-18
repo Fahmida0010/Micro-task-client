@@ -46,6 +46,7 @@ import AllTasks from "../pages/AllTasks/AllTasks";
 import Contact from "../pages/Contact/Contact";
 import HelpSupport from "../pages/HelpSupport/HelpSupport";
 import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
+import WithdrawRequests from "../pages/Dashboard/admin/WithdrawRequests";
 
 const DashboardRedirect = () => {
   const { user: authUser, loading: authLoading } = useAuth();
@@ -247,6 +248,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <ManageTasks />
+          </AdminRoute>
+        ),
+      },
+       {
+        path: "withdraw-requests",
+        element: (
+          <AdminRoute>
+            <WithdrawRequests />
           </AdminRoute>
         ),
       },

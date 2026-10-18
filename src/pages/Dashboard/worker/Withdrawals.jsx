@@ -51,8 +51,7 @@ const Withdrawals = () => {
 
     return true;
   };
-
-  const handleWithdraw = async () => {
+const handleWithdraw = async () => {
     if (withdrawCoin < 200) {
       toast.error("Minimum 200 coins required to withdraw");
       return;
@@ -79,7 +78,10 @@ const Withdrawals = () => {
 
       toast.success("Withdrawal request submitted successfully!");
 
-      // ❌ coin deduct remove
+      // 🔥 Ekhane state local-vabe update kore din
+      setCoin(coin - withdrawCoin);
+      setEarning((coin - withdrawCoin) / 20);
+
       setWithdrawCoin(0);
       setAccount("");
     } catch (err) {

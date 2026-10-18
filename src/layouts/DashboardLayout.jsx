@@ -84,6 +84,7 @@ const DashboardLayout = () => {
     { label: "Home", path: "/dashboard/admin-home", icon: <FaHome /> },
     { label: "Manage Users", path: "/dashboard/manage-users", icon: <FaUsers /> },
     { label: "Manage Tasks", path: "/dashboard/manage-tasks", icon: <FaUserShield /> },
+    { label: "Withdraw Requests", path: "/dashboard/withdraw-requests", icon: <FaHistory/> },
   ];
 
   let menuItems = [];
