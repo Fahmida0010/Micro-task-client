@@ -55,7 +55,7 @@ const AddTask = () => {
     };
 
     try {
-      await axiosSecure.post("/tasks", task);
+      await axiosSecure.post("/add-tasks", task);
 
       toast.success("Task added successfully!");
       await refetchUser();

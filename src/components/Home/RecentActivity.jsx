@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaDollarSign, FaUser, FaEnvelope } from "react-icons/fa";
-import axiosSecure from "../../hooks/useAxiosSecure";
+import axios from "axios";
 
 // 🌟 Skeleton Loader for Approved Submissions Page
 const ApprovedSubmissionsSkeleton = () => {
@@ -32,8 +32,7 @@ const ApprovedSubmissions = () => {
 
   useEffect(() => {
     setLoading(true);
-    axiosSecure
-      .get("/submissions/approved")
+  axios.get(`${import.meta.env.VITE_API_URL}/submissions/approved`)
       .then((res) => {
         setSubmissions(res.data);
         setLoading(false);
