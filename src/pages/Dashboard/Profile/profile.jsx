@@ -41,6 +41,15 @@ const Profile = () => {
     }
   };
 
+  // Helper function for rendering image preview correctly
+  const getProfileImage = () => {
+    if (!imagePreview) return "https://via.placeholder.com/150";
+    if (imagePreview.startsWith("blob:") || imagePreview.startsWith("http")) {
+      return imagePreview;
+    }
+    return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${imagePreview}`;
+  };
+
   // Profile Update Mutation
   const updateMutation = useMutation({
     mutationFn: async (formData) => {
@@ -109,7 +118,7 @@ const Profile = () => {
             <div className="flex flex-col items-center -mt-16 sm:-mt-20 mb-2">
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 group">
                 <img
-                  src={imagePreview || "https://via.placeholder.com/150"}
+                  src={getProfileImage()}
                   alt="Profile"
                   className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg bg-white dark:bg-gray-800"
                 />
